@@ -13,5 +13,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build aspen/trunk image
         run: |
-              docker build . -t ghcr.io/erwijet/aspen-trunk:latest -f trunk.dockerfile
-              docker push ghcr.io/erwijet/aspen-trunk:latest
+              docker build . -t ghcr.io/erwijet/aspen/trunk:latest -f trunk.dockerfile
+              docker push ghcr.io/erwijet/aspen/trunk:latest
