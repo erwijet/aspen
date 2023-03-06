@@ -1,0 +1,92 @@
+syntax = "proto3";
+package aspen;
+
+message Empty { }
+
+message Authority {
+    string jwt = 1;
+}
+
+message Link {
+    string id = 1;
+    string url = 2;
+    repeated string keywords = 3;
+}
+
+service Authorization {
+    rpc create_account (CreateAccountRequest) returns (AuthResponse);
+    rpc log_in (LoginRequest) returns (AuthResponse);
+    rpc close_account (CloseAccountRequest) returns (Empty);
+}
+
+message CreateAccountRequest {
+    string username = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string password = 4;
+}
+
+message AuthResponse {
+    // if authority is absent, it can be inferred that the AuthRequest was unsuccessful
+    optional Authority authority = 1;
+}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message CloseAccountRequest {
+    Authority authority = 1;
+}
+
+service Links {
+    rpc search (SearchLinksRequest) returns (SearchLinksResponse);
+    rpc update (UpdateLinkRequest) returns (UpdateLinkResponse);
+    rpc delete (DeleteLinkRequest) returns (Empty);
+    rpc create (CreateLinkRequest) returns (CreateLinkResponse);
+}
+
+message SearchLinksRequest {
+    Authority authority = 1;
+
+    repeated string keywords = 2;
+    optional int32 page = 3;
+    optional int32 limit = 4;
+}
+
+message SearchLinksResponse {
+    message ScoredLink {
+        int32 score = 1;
+        Link link = 2;
+    }
+        
+
+    repeated ScoredLink results = 1;
+}
+
+message UpdateLinkRequest {
+    Authority authority = 1;
+
+    string link_id = 2;
+    Link update = 3;
+}
+
+message UpdateLinkResponse {
+    Link link = 2;
+}
+
+message DeleteLinkRequest {
+    Authority authority = 1;
+    string link_id = 2;
+}
+
+message CreateLinkRequest {
+    Authority authority = 1;
+    string url = 2;
+    repeated string keywords = 3;
+}
+
+message CreateLinkResponse {
+    Link link = 1;
+}
