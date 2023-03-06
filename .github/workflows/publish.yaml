@@ -1,0 +1,17 @@
+name: publish
+on: [push]
+jobs:
+  publish-trunk-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build aspen/trunk image
+        run: |
+              docker build . -t ghcr.io/erwijet/aspen-trunk:latest -f trunk.dockerfile
+              docker push ghcr.io/erwijet/aspen-trunk:latest

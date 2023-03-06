@@ -1,6 +1,8 @@
 FROM rust:bullseye
 WORKDIR /trunk
 
+LABEL org.opencontainers.image.source https://github.com/erwijet/aspen
+
 COPY ./trunk /trunk
 COPY ./protos /protos
 
