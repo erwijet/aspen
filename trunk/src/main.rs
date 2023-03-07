@@ -1,6 +1,5 @@
 use async_once::AsyncOnce;
 use db::AspenDB;
-#[macro_use]
 use lazy_static::lazy_static;
 
 use proto::{authorization_server::AuthorizationServer, links_server::LinksServer};
@@ -15,6 +14,7 @@ pub mod proto {
 
 mod db;
 mod jwt;
+mod macros;
 
 mod services {
   pub mod authorization;

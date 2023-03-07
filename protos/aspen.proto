@@ -49,20 +49,11 @@ service Links {
 
 message SearchLinksRequest {
     Authority authority = 1;
-
-    repeated string keywords = 2;
-    optional int32 page = 3;
-    optional int32 limit = 4;
+    string query = 2;
 }
 
 message SearchLinksResponse {
-    message ScoredLink {
-        int32 score = 1;
-        Link link = 2;
-    }
-        
-
-    repeated ScoredLink results = 1;
+    repeated Link results = 1;
 }
 
 message UpdateLinkRequest {

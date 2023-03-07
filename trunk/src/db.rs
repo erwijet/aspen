@@ -1,9 +1,11 @@
+use futures::StreamExt;
 use std::{env, io::Read, str::FromStr};
 
 use mongodb::{
-  bson::{doc, oid::ObjectId},
+  bson::{doc, document::Iter, from_document, oid::ObjectId, Bson, Document},
   options::{
-    ClientOptions, DeleteOptions, FindOneAndDeleteOptions, FindOneOptions, InsertOneOptions,
+    AggregateOptions, ClientOptions, DeleteOptions, FindOneAndDeleteOptions, FindOneOptions,
+    InsertOneOptions,
   },
   results::{DeleteResult, InsertOneResult},
   Client, Collection,
@@ -11,11 +13,36 @@ use mongodb::{
 use serde::{de::IntoDeserializer, Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
+use crate::proto;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Link {
-  id: String,
+  _id: String,
+  account_id: String,
   url: String,
   keywords: Vec<String>,
+}
+
+impl Into<proto::Link> for Link {
+  fn into(self) -> proto::Link {
+    proto::Link { id: self._id, url: self.url, keywords: self.keywords }
+  }
+}
+
+impl Into<Link> for Document {
+  fn into(self) -> Link {
+    Link {
+      _id: self.get_object_id("_id").unwrap().to_string(),
+      account_id: self.get_str("account_id").unwrap().to_string(),
+      url: self.get_str("url").unwrap().to_string(),
+      keywords: self
+        .get_array("keywords")
+        .unwrap()
+        .into_iter()
+        .map(|subobj| subobj.as_str().unwrap().to_owned())
+        .collect(),
+    }
+  }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -87,5 +114,49 @@ impl AspenDB {
       .await?;
 
     Ok(res)
+  }
+}
+
+impl AspenDB {
+  pub async fn search_links(
+    &self,
+    query: String,
+    account_id: String,
+  ) -> Result<Vec<Link>, mongodb::error::Error> {
+    let mut cursor = self
+      .collection::<Link>("links")
+      .aggregate(
+        vec![
+          doc! {
+            "$search": {
+              "index": "links",
+              "text": {
+                "path": {
+                  "wildcard": "*"
+                },
+                "query": query
+              }
+            }
+          },
+          doc! {
+            "$match": {
+              "account_id": account_id
+            }
+          },
+          doc! {
+            "$limit": 10
+          },
+        ],
+        AggregateOptions::default(),
+      )
+      .await?;
+
+    let mut links = vec![];
+
+    while let Some(doc) = cursor.next().await {
+      links.push(doc?.into());
+    }
+
+    Ok(links)
   }
 }

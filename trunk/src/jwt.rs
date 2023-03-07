@@ -4,6 +4,7 @@ use lazy_static::lazy_static;
 use sha2::Sha256;
 use std::env;
 use std::{collections::BTreeMap, time::SystemTime};
+use tonic::Status;
 
 use crate::{db::Account, proto::Authority};
 
@@ -41,5 +42,23 @@ impl Signable for Authority {
       .verify_with_key(&*JWT_SECRET)
       .ok()
       .map(|claims: BTreeMap<String, String>| claims.get("sub").unwrap().into())
+  }
+}
+
+pub trait JwtSubject {
+  fn sub(&self) -> Result<String, Status>;
+}
+
+impl<T> JwtSubject for Option<T>
+where
+  T: Signable,
+{
+  fn sub(&self) -> Result<String, Status> {
+    match self {
+      None => Err(Status::unauthenticated("No authority specified")),
+      Some(signable) => signable
+        .get_account_id()
+        .ok_or(Status::permission_denied("Invalid or insufficient authority")),
+    }
   }
 }
