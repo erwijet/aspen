@@ -2,8 +2,8 @@ use hmac::{Hmac, Mac};
 use jwt::{SignWithKey, VerifyWithKey};
 use lazy_static::lazy_static;
 use sha2::Sha256;
-use std::collections::BTreeMap;
 use std::env;
+use std::{collections::BTreeMap, time::SystemTime};
 
 use crate::{db::Account, proto::Authority};
 
@@ -22,11 +22,15 @@ pub trait Signable {
 impl Signable for Authority {
   fn new(account: Account) -> Self {
     let mut claims = BTreeMap::new();
+    let ts = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
 
-    claims.insert("id", account._id.to_string());
-    claims.insert("username", account.username);
-    claims.insert("first_name", account.first_name);
-    claims.insert("last_name", account.last_name);
+    claims.insert("sub", account._id.to_string());
+    claims.insert("usr", account.username);
+    claims.insert("iss", "trunk".into());
+    claims.insert("iat", ts.to_string());
+    claims.insert("exp", (ts + (60 * 60 * 2)).to_string());
+    claims.insert("firstname", account.first_name);
+    claims.insert("lastname", account.last_name);
 
     Self { jwt: claims.sign_with_key(&*JWT_SECRET).unwrap() }
   }
@@ -36,6 +40,6 @@ impl Signable for Authority {
       .jwt
       .verify_with_key(&*JWT_SECRET)
       .ok()
-      .map(|claims: BTreeMap<String, String>| claims.get("id").unwrap().into())
+      .map(|claims: BTreeMap<String, String>| claims.get("sub").unwrap().into())
   }
 }

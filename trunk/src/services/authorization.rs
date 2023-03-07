@@ -1,6 +1,7 @@
-use std::env;
+use std::{env, fmt::format};
 
 use lazy_static::lazy_static;
+use sha2::{Digest, Sha256};
 use tonic::{Request, Response, Status};
 
 use crate::{
@@ -33,13 +34,41 @@ impl Authorization for AuthorizationService {
   }
 
   async fn log_in(&self, req: Request<LoginRequest>) -> Result<Response<AuthResponse>, Status> {
-    Ok(Response::new(AuthResponse { authority: { None } }))
+    let LoginRequest { username, password } = req.into_inner();
+
+    let mut hasher = Sha256::new();
+    hasher.update(password.as_bytes());
+    let sha256 = format!("{:X}", hasher.finalize());
+
+    let acct = DB
+      .get()
+      .await
+      .get_account(&username, &sha256)
+      .await
+      .map_err(|err| Status::internal(format!("{:?}", err)))?;
+
+    Ok(Response::new(AuthResponse { authority: { acct.map(|acct| Authority::new(acct)) } }))
   }
 
   async fn close_account(
     &self,
     req: Request<CloseAccountRequest>,
   ) -> Result<Response<Empty>, Status> {
+    let CloseAccountRequest { authority } = req.into_inner();
+    let id = match authority {
+      None => Err(Status::unauthenticated("No authority specified")),
+      Some(authority) => authority
+        .get_account_id()
+        .ok_or(Status::permission_denied("Invalid or insufficient authority")),
+    }?;
+
+    DB.get()
+      .await
+      .delete_account(&id)
+      .await
+      .map_err(|err| Status::internal(format!("{:?}", err)))?
+      .ok_or(Status::not_found("Valid authority but no account"))?;
+
     Ok(Response::new(Empty {}))
   }
 }

@@ -1,12 +1,15 @@
-use std::{env, io::Read};
+use std::{env, io::Read, str::FromStr};
 
 use mongodb::{
   bson::{doc, oid::ObjectId},
-  options::{ClientOptions, FindOneOptions, InsertOneOptions, DeleteOptions},
-  Client, Collection, results::{DeleteResult, InsertOneResult},
+  options::{
+    ClientOptions, DeleteOptions, FindOneAndDeleteOptions, FindOneOptions, InsertOneOptions,
+  },
+  results::{DeleteResult, InsertOneResult},
+  Client, Collection,
 };
-use serde::{Deserialize, Serialize, de::IntoDeserializer};
-use sha2::{Sha256, Digest};
+use serde::{de::IntoDeserializer, Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Link {
@@ -45,18 +48,18 @@ impl AspenDB {
 }
 
 impl AspenDB {
-  pub async fn create_account(&self, username: String, first_name: String, last_name: String, password: String) -> Result<Account, mongodb::error::Error> {
+  pub async fn create_account(
+    &self,
+    username: String,
+    first_name: String,
+    last_name: String,
+    password: String,
+  ) -> Result<Account, mongodb::error::Error> {
     let mut hasher = Sha256::new();
     hasher.update(password.as_bytes());
 
     let sha256 = format!("{:X}", hasher.finalize());
-    let acct = Account {
-        _id: ObjectId::new(),
-        first_name,
-        last_name,
-        sha256,
-        username,
-    };
+    let acct = Account { _id: ObjectId::new(), first_name, last_name, sha256, username };
 
     self.collection::<Account>("accounts").insert_one(&acct, InsertOneOptions::default()).await?;
     Ok(acct)
@@ -65,17 +68,24 @@ impl AspenDB {
   pub async fn get_account(
     &self,
     username: &str,
-    sha265: &str,
+    sha256: &str,
   ) -> Result<Option<Account>, mongodb::error::Error> {
     let res = self
       .collection::<Account>("accounts")
-      .find_one(doc! { "username": username, "sha265": sha265 }, FindOneOptions::default())
+      .find_one(doc! { "username": username, "sha256": sha256 }, FindOneOptions::default())
       .await?;
     Ok(res)
   }
 
-  pub async fn delete_account(&self, id: &str) -> Result<DeleteResult, mongodb::error::Error> {
-    let res = self.collection::<Account>("accounts").delete_one(doc! { "_id": id }, DeleteOptions::default()).await?;
+  pub async fn delete_account(&self, id: &str) -> Result<Option<Account>, mongodb::error::Error> {
+    let res = self
+      .collection::<Account>("accounts")
+      .find_one_and_delete(
+        doc! { "_id": ObjectId::from_str(id).unwrap() },
+        FindOneAndDeleteOptions::default(),
+      )
+      .await?;
+
     Ok(res)
   }
 }
