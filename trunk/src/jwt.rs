@@ -18,6 +18,7 @@ lazy_static! {
 pub trait Signable {
   fn new(account: Account) -> Self;
   fn get_account_id(&self) -> Option<String>;
+  fn get_account_username(&self) -> Option<String>;
 }
 
 impl Signable for Authority {
@@ -43,21 +44,36 @@ impl Signable for Authority {
       .ok()
       .map(|claims: BTreeMap<String, String>| claims.get("sub").unwrap().into())
   }
+
+  fn get_account_username(&self) -> Option<String> {
+    self
+      .jwt
+      .verify_with_key(&*JWT_SECRET)
+      .ok()
+      .map(|claims: BTreeMap<String, String>| claims.get("usr").unwrap().into())
+  }
 }
 
 pub trait JwtSubject {
   fn sub(&self) -> Result<String, Status>;
+  fn usr(&self) -> Result<String, Status>;
 }
 
-impl<T> JwtSubject for Option<T>
-where
-  T: Signable,
-{
+impl<T: Signable> JwtSubject for Option<T> {
   fn sub(&self) -> Result<String, Status> {
     match self {
       None => Err(Status::unauthenticated("No authority specified")),
       Some(signable) => signable
         .get_account_id()
+        .ok_or(Status::permission_denied("Invalid or insufficient authority")),
+    }
+  }
+
+  fn usr(&self) -> Result<String, Status> {
+    match self {
+      None => Err(Status::unauthenticated("No authority specified")),
+      Some(signable) => signable
+        .get_account_username()
         .ok_or(Status::permission_denied("Invalid or insufficient authority")),
     }
   }

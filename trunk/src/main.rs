@@ -6,7 +6,7 @@ use proto::{authorization_server::AuthorizationServer, links_server::LinksServer
 use tonic::transport::Server;
 
 use services::{authorization::AuthorizationService, links::LinksService};
-use tower_http::trace::{Trace, TraceLayer};
+use tower_http::trace::TraceLayer;
 
 pub mod proto {
   tonic::include_proto!("aspen");
@@ -14,7 +14,6 @@ pub mod proto {
 
 mod db;
 mod jwt;
-mod macros;
 
 mod services {
   pub mod authorization;

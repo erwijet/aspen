@@ -48,7 +48,7 @@ service Links {
 }
 
 message SearchLinksRequest {
-    Authority authority = 1;
+    string username = 1;
     string query = 2;
 }
 

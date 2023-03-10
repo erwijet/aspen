@@ -2,16 +2,13 @@ use sha2::{Digest, Sha256};
 use tonic::{Request, Response, Status};
 
 use crate::{
-  jwt::Signable,
+  jwt::{Signable, JwtSubject},
   proto::{
     authorization_server::Authorization, AuthResponse, Authority, CloseAccountRequest,
     CreateAccountRequest, Empty, LoginRequest,
   },
   DB
 };
-
-#[macro_use]
-use crate::authority_sub;
 
 #[derive(Debug, Default)]
 pub struct AuthorizationService {}
@@ -55,16 +52,8 @@ impl Authorization for AuthorizationService {
     req: Request<CloseAccountRequest>,
   ) -> Result<Response<Empty>, Status> {
     let CloseAccountRequest { authority } = req.into_inner();
-    // let id = match authority {
-    //   None => Err(Status::unauthenticated("No authority specified")),
-    //   Some(authority) => authority
-    //     .get_account_id()
-    //     .ok_or(Status::permission_denied("Invalid or insufficient authority")),
-    // }?;
 
-
-
-    let id = authority_sub!(authority);
+    let id = authority.sub()?;
 
     DB.get()
       .await
