@@ -28,8 +28,7 @@ lazy_static! {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-  let addr = "[::1]:9000".parse().unwrap();
-
+  let addr = "0.0.0.0:9000".parse().unwrap();
 
   Server::builder()
     .layer(TraceLayer::new_for_grpc())
