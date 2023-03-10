@@ -162,7 +162,7 @@ impl AspenDB {
           },
           doc! {
             "$match": {
-              "username": username
+              "account": username
             }
           },
           doc! {

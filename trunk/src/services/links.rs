@@ -103,12 +103,12 @@ impl Links for LinksService {
     req: Request<CreateLinkRequest>,
   ) -> Result<Response<CreateLinkResponse>, Status> {
     let CreateLinkRequest { authority, url, keywords } = req.into_inner();
-    let account_id = authority.sub()?;
+    let username = authority.usr()?;
 
     let link = DB
       .get()
       .await
-      .create_link(&account_id, &url, &keywords)
+      .create_link(&username, &url, &keywords)
       .await
       .map_err(|err| Status::internal(format!("{}", err)))?;
 
