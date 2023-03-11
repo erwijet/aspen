@@ -119,6 +119,7 @@ impl AspenDB {
     username: &str,
     sha256: &str,
   ) -> Result<Option<Account>, mongodb::error::Error> {
+
     let res = self
       .collection::<Account>("accounts")
       .find_one(doc! { "username": username, "sha256": sha256 }, FindOneOptions::default())
@@ -145,6 +146,8 @@ impl AspenDB {
     query: String,
     username: String,
   ) -> Result<Vec<Link>, mongodb::error::Error> {
+    println!("running search. q={}, usr={}", query, username);
+
     let mut cursor = self
       .collection::<Link>("links")
       .aggregate(

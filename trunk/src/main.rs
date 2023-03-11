@@ -9,11 +9,12 @@ use services::{authorization::AuthorizationService, links::LinksService};
 use tower_http::trace::TraceLayer;
 
 pub mod proto {
-  tonic::include_proto!("aspen");
+  tonic::include_proto!("aspen.trunk");
 }
 
 mod db;
 mod jwt;
+mod helpers;
 
 mod services {
   pub mod authorization;

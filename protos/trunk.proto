@@ -1,5 +1,5 @@
 syntax = "proto3";
-package aspen;
+package aspen.trunk;
 
 message Empty { }
 
@@ -48,8 +48,8 @@ service Links {
 }
 
 message SearchLinksRequest {
-    string username = 1;
-    string query = 2;
+    string username = 3;
+    string query = 4;
 }
 
 message SearchLinksResponse {

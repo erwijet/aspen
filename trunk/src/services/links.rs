@@ -7,7 +7,7 @@ use crate::{
     self, links_server::Links, CreateLinkRequest, CreateLinkResponse, DeleteLinkRequest, Empty,
     SearchLinksRequest, SearchLinksResponse, UpdateLinkRequest, UpdateLinkResponse,
   },
-  DB,
+  DB, check_field,
 };
 
 #[derive(Debug, Default)]
@@ -20,6 +20,9 @@ impl Links for LinksService {
     req: Request<SearchLinksRequest>,
   ) -> Result<Response<SearchLinksResponse>, Status> {
     let SearchLinksRequest { username, query, .. } = req.into_inner();
+
+    check_field!(username);
+    check_field!(query);
 
     let results = DB
       .get()
@@ -38,6 +41,8 @@ impl Links for LinksService {
     req: Request<UpdateLinkRequest>,
   ) -> Result<Response<UpdateLinkResponse>, Status> {
     let UpdateLinkRequest { authority, link_id, update } = req.into_inner();
+
+    check_field!(link_id);
 
     if update.is_none() {
       return Err(Status::invalid_argument("no update specified"));
@@ -77,6 +82,8 @@ impl Links for LinksService {
     let DeleteLinkRequest { authority, link_id } = req.into_inner();
     let username = authority.usr()?;
 
+    check_field!(link_id);
+
     let link = DB
       .get()
       .await
@@ -104,6 +111,8 @@ impl Links for LinksService {
   ) -> Result<Response<CreateLinkResponse>, Status> {
     let CreateLinkRequest { authority, url, keywords } = req.into_inner();
     let username = authority.usr()?;
+
+    check_field!(url);
 
     let link = DB
       .get()
