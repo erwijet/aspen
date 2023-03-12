@@ -1,7 +1,11 @@
-name: publish
-on: [push]
+name: twig
+on:
+  push:
+    paths:
+      - twig.dockerfile
+      - twig/**
 jobs:
-  publish-trunk-docker-image:
+  twig:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -11,7 +15,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build aspen/trunk image
+      - name: Build twig Image
         run: |
-              docker build . -t ghcr.io/erwijet/aspen/trunk:latest -f trunk.dockerfile
-              docker push ghcr.io/erwijet/aspen/trunk:latest
+              docker build . -t ghcr.io/erwijet/aspen/twig:latest -f twig.dockerfile
+              docker push ghcr.io/erwijet/aspen/twig:latest
