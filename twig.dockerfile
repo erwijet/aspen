@@ -16,4 +16,4 @@ RUN poetry run python3 \
     --grpc_python_out=. \
     ../protos/trunk.proto
 
-CMD ["poetry", "run", "python3", "-m", "uvicorn", "main:app"]
+CMD ["poetry", "run", "python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0"]
