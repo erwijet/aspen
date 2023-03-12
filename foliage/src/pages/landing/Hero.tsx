@@ -2,16 +2,17 @@ import { Button, Group } from "@mantine/core";
 
 import image from "@/../assets/brand.png";
 import {
-    Container,
-    createStyles,
-    Image,
-    List,
-    rem,
-    Text,
-    ThemeIcon,
-    Title
+  Container,
+  createStyles,
+  Image,
+  List,
+  rem,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -70,6 +71,8 @@ const useStyles = createStyles((theme) => ({
 
 export const Hero = () => {
   const { classes } = useStyles();
+  const navigate = useNavigate();
+
   return (
     <div>
       <Container>
@@ -113,14 +116,16 @@ export const Hero = () => {
               <Button radius="xl" size="md" className={classes.control}>
                 Get started
               </Button>
-              <Button
-                variant="default"
-                radius="xl"
-                size="md"
-                className={classes.control}
-              >
-                Source code
-              </Button>
+              <a href={"https://github.com/erwijet/aspen"}>
+                <Button
+                  variant="default"
+                  radius="xl"
+                  size="md"
+                  className={classes.control}
+                >
+                  Source code
+                </Button>
+              </a>
             </Group>
           </div>
           <Image src={image} className={classes.image} />

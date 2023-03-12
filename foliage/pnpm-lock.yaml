@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@emotion/react': ^11.10.6
   '@mantine/core': ^6.0.1
+  '@mantine/form': ^6.0.1
   '@mantine/hooks': ^6.0.1
   '@tabler/icons-react': ^2.10.0
   '@types/react': ^18.0.27
@@ -18,6 +19,7 @@ specifiers:
 dependencies:
   '@emotion/react': 11.10.6_pmekkgnqduwlme35zpnqhenc34
   '@mantine/core': 6.0.1_7atxah5aiy65tdrz25o24k4n44
+  '@mantine/form': 6.0.1_react@18.2.0
   '@mantine/hooks': 6.0.1_react@18.2.0
   '@tabler/icons-react': 2.10.0_react@18.2.0
   react: 18.2.0
@@ -423,6 +425,16 @@ packages:
     transitivePeerDependencies:
       - '@emotion/react'
       - '@types/react'
+    dev: false
+
+  /@mantine/form/6.0.1_react@18.2.0:
+    resolution: {integrity: sha512-oRoe6YnurOzAGUY1DGXTFLofWPEeE8prEdwOv3pJEsp4ggaZAaQQSivIla5yzcsQasptOxMr2Gb8AOk4Ch/WHg==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      fast-deep-equal: 3.1.3
+      klona: 2.0.6
+      react: 18.2.0
     dev: false
 
   /@mantine/hooks/6.0.1_react@18.2.0:
@@ -868,6 +880,10 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
+  /fast-deep-equal/3.1.3:
+    resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
+    dev: false
+
   /find-root/1.1.0:
     resolution: {integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==}
     dev: false
@@ -934,6 +950,11 @@ packages:
 
   /json-parse-even-better-errors/2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
+    dev: false
+
+  /klona/2.0.6:
+    resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
+    engines: {node: '>= 8'}
     dev: false
 
   /lines-and-columns/1.2.4:
