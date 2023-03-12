@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "twig"
+version = "0.1.0"
+description = ""
+authors = ["Tyler Holewinski <tsh6656@rit.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.94.0"
+uvicorn = {extras = ["standard"], version = "^0.21.0"}
+grpcio = "^1.51.3"
+grpcio-tools = "^1.51.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

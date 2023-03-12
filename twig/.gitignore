@@ -1,0 +1,6 @@
+trunk*.py
+trunk*.pyi
+
+__pycache__/
+.venv/
+proto/
