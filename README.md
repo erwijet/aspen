@@ -8,6 +8,7 @@
 <p align="center">
   <img src="https://github.com/erwijet/aspen/actions/workflows/twig.yaml/badge.svg" />
   <img src="https://github.com/erwijet/aspen/actions/workflows/trunk.yaml/badge.svg" />
+  <img src="https://vercelbadge.vercel.app/api/erwijet/aspen" />
 </p>
 
 Aspen is a custom, keyword-based public search engine designed for a replacement for your bookmarks.
