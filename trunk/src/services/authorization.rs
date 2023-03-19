@@ -2,12 +2,13 @@ use sha2::{Digest, Sha256};
 use tonic::{Request, Response, Status};
 
 use crate::{
+  check_field,
   jwt::{JwtSubject, Signable},
   proto::{
     authorization_server::Authorization, AuthResponse, Authority, CloseAccountRequest,
-    CreateAccountRequest, Empty, LoginRequest,
+    CreateAccountRequest, Empty, IsUsernameTakenRequest, IsUsernameTakenResponse, LoginRequest,
   },
-  DB, check_field,
+  DB,
 };
 
 #[derive(Debug, Default)]
@@ -77,5 +78,22 @@ impl Authorization for AuthorizationService {
       .ok_or(Status::not_found("Valid authority but no account"))?;
 
     Ok(Response::new(Empty {}))
+  }
+
+  async fn is_username_taken(
+    &self,
+    req: Request<IsUsernameTakenRequest>,
+  ) -> Result<Response<IsUsernameTakenResponse>, Status> {
+    let IsUsernameTakenRequest { username } = req.into_inner();
+
+    let taken = DB
+      .get()
+      .await
+      .get_account_by_username(&username)
+      .await
+      .map_err(|err| Status::internal(format!("{}", err)))?
+      .is_some();
+
+    Ok(Response::new(IsUsernameTakenResponse { username, taken }))
   }
 }

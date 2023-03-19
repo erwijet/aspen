@@ -45,8 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
       TraceLayer::new_for_grpc()
         .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
         .on_response(DefaultOnResponse::new().level(Level::INFO))
-        .on_failure(DefaultOnFailure::new().level(Level::INFO)),
-    )
+        .on_failure(DefaultOnFailure::new().level(Level::INFO)),)
     .add_service(auth_svc)
     .add_service(links_svc)
     .serve(addr)

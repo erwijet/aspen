@@ -114,12 +114,28 @@ impl AspenDB {
     Ok(acct)
   }
 
+  pub async fn get_account_by_username(
+    &self,
+    username: &str,
+  ) -> Result<Option<Account>, mongodb::error::Error> {
+    let res = self
+      .collection::<Account>("accounts")
+      .find_one(
+        doc! {
+          "username": username
+        },
+        None,
+      )
+      .await?;
+
+    Ok(res)
+  }
+
   pub async fn get_account(
     &self,
     username: &str,
     sha256: &str,
   ) -> Result<Option<Account>, mongodb::error::Error> {
-
     let res = self
       .collection::<Account>("accounts")
       .find_one(doc! { "username": username, "sha256": sha256 }, FindOneOptions::default())

@@ -17,6 +17,7 @@ service Authorization {
     rpc create_account (CreateAccountRequest) returns (AuthResponse);
     rpc log_in (LoginRequest) returns (AuthResponse);
     rpc close_account (CloseAccountRequest) returns (Empty);
+    rpc is_username_taken(IsUsernameTakenRequest) returns (IsUsernameTakenResponse);
 }
 
 message CreateAccountRequest {
@@ -38,6 +39,15 @@ message LoginRequest {
 
 message CloseAccountRequest {
     Authority authority = 1;
+}
+
+message IsUsernameTakenRequest {
+    string username = 1;
+}
+
+message IsUsernameTakenResponse {
+    string username = 1;
+    bool taken = 2;
 }
 
 service Links {
