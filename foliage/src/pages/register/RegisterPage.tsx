@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
-  const [ loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -57,19 +57,18 @@ const RegisterPage = () => {
 
     const { username, password, firstName, lastName } = form.values;
 
-    auth.client
-      .create_account({
-        username,
-        password,
-        firstName,
-        lastName,
-      })
-      .then(({ authority }) => {
-        if (!authority || !authority.jwt) alert("failed to create account!");
-        localStorage.setItem("app.aspn.authority", authority!.jwt);
+    const res = await auth.client.create_account({
+      username,
+      password,
+      firstName,
+      lastName,
+    });
 
-        nav('/console');
-      });
+    if (!res.authority || !res.authority.jwt)
+      alert("failed to create account!");
+    localStorage.setItem("app.aspn.authority", res.authority!.jwt);
+
+    nav("/console");
   }
 
   return (
