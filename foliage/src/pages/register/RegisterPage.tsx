@@ -1,24 +1,24 @@
 import NavBar from "@/shared/NavBar";
-import { useAuth } from "@/useAuth";
+import { useAuth } from "@/shared/useAuth";
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
   Anchor,
   Paper,
   Title,
   Text,
   Container,
-  Group,
   Button,
   Box,
   Flex,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { m } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const [ loading, setLoading ] = useState(false);
+
   const form = useForm({
     initialValues: {
       username: "",
@@ -37,6 +37,7 @@ const RegisterPage = () => {
   });
 
   const auth = useAuth();
+  const nav = useNavigate();
 
   useEffect(() => {
     const { username } = form.values;
@@ -50,15 +51,25 @@ const RegisterPage = () => {
 
   async function register() {
     if (!auth.ready) return;
+    if (Object.values(form.errors).length > 0) return;
 
-    const { username, password } = form.values;
+    setLoading(true);
 
-    auth.client.create_account({
-      username,
-      password,
-      firstName: "Joe",
-      lastName: "Smith",
-    });
+    const { username, password, firstName, lastName } = form.values;
+
+    auth.client
+      .create_account({
+        username,
+        password,
+        firstName,
+        lastName,
+      })
+      .then(({ authority }) => {
+        if (!authority || !authority.jwt) alert("failed to create account!");
+        localStorage.setItem("app.aspn.authority", authority!.jwt);
+
+        nav('/console');
+      });
   }
 
   return (
@@ -120,15 +131,17 @@ const RegisterPage = () => {
 
           <Button
             disabled={
-              form.values.username != "" &&
+              Object.values(form.values).some((v) => v == "") ||
               Object.values(form.errors).length != 0
             }
             fullWidth
+            loading={loading}
             mt="xl"
             onClick={() => {
               Object.keys(form.values)
                 .filter((k) => k != "username")
                 .forEach(form.validateField);
+              register();
             }}
           >
             Blastoff 🚀

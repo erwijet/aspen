@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import RegisterPage from "./pages/register/RegisterPage";
-import { useAuth } from "./useAuth";
+import { useAuth } from "./shared/useAuth";
 
 useAuth.getState().init();
 
