@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "pnpm run protos:gen && tsc && vite build",
+    "preview": "vite preview",
+    "protos:gen": "rm -rf vendor && mkdir vendor && sh protoc.sh"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -15,15 +16,24 @@
     "@mantine/hooks": "^6.0.1",
     "@tabler/icons-react": "^2.10.0",
     "framer-motion": "^10.2.4",
+    "immer": "^9.0.19",
+    "nice-grpc-common": "^2.0.1",
+    "nice-grpc-web": "^3.1.0",
+    "protobufjs": "^7.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.9.0"
+    "react-router-dom": "^6.9.0",
+    "ws": "^8.13.0",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "grpc-tools": "^1.12.4",
+    "grpc_tools_node_protoc_ts": "^5.3.3",
+    "ts-proto": "^1.141.1",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   }

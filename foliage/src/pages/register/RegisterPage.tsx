@@ -1,4 +1,5 @@
 import NavBar from "@/shared/NavBar";
+import { useAuth } from "@/useAuth";
 import {
   TextInput,
   PasswordInput,
@@ -11,25 +12,54 @@ import {
   Group,
   Button,
   Box,
+  Flex,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
+import { m } from "framer-motion";
+import { useEffect } from "react";
 
 const RegisterPage = () => {
   const form = useForm({
     initialValues: {
-      email: "",
+      username: "",
+      firstName: "",
+      lastName: "",
       password: "",
       passwordConf: "",
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      password: (value, { passwordConf }) =>
-        value == passwordConf ? null : "Passwords must match",
+      firstName: (value) => (value == "" ? "This field is required" : null),
+      lastName: (value) => (value == "" ? "This field is required" : null),
       passwordConf: (value, { password }) =>
         value == password ? null : "Passwords must match",
     },
+    validateInputOnChange: true,
   });
+
+  const auth = useAuth();
+
+  useEffect(() => {
+    const { username } = form.values;
+    if (!auth.ready || !username) return;
+
+    auth.client.is_username_taken({ username }).then(({ taken }) => {
+      if (taken)
+        form.setFieldError("username", "That username is already taken!");
+    });
+  }, [form.values.username]);
+
+  async function register() {
+    if (!auth.ready) return;
+
+    const { username, password } = form.values;
+
+    auth.client.create_account({
+      username,
+      password,
+      firstName: "Joe",
+      lastName: "Smith",
+    });
+  }
 
   return (
     <Box>
@@ -50,11 +80,28 @@ const RegisterPage = () => {
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
-            label="Email"
-            placeholder="me@example.com"
+            label="Pick a Username"
+            placeholder="treelover9"
             required
-            {...form.getInputProps("email")}
+            {...form.getInputProps("username")}
           />
+
+          <Flex gap={8} mt="md">
+            <TextInput
+              label={"First Name"}
+              placeholder={"David"}
+              required
+              {...form.getInputProps("firstName")}
+            />
+
+            <TextInput
+              label={"Last Name"}
+              placeholder={"Bignelli"}
+              required
+              {...form.getInputProps("lastName")}
+            />
+          </Flex>
+
           <PasswordInput
             label="Password"
             placeholder="hunter2"
@@ -71,8 +118,20 @@ const RegisterPage = () => {
             {...form.getInputProps("passwordConf")}
           />
 
-          <Button fullWidth mt="xl" onClick={() => form.validate()}>
-            Blastoff
+          <Button
+            disabled={
+              form.values.username != "" &&
+              Object.values(form.errors).length != 0
+            }
+            fullWidth
+            mt="xl"
+            onClick={() => {
+              Object.keys(form.values)
+                .filter((k) => k != "username")
+                .forEach(form.validateField);
+            }}
+          >
+            Blastoff 🚀
           </Button>
         </Paper>
       </Container>

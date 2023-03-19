@@ -1,4 +1,5 @@
 import NavBar from "@/shared/NavBar";
+import { useAuth } from "@/useAuth";
 import {
   TextInput,
   PasswordInput,
@@ -8,10 +9,10 @@ import {
   Title,
   Text,
   Container,
-  Group,
   Button,
   Box,
 } from "@mantine/core";
+import { m } from "framer-motion";
 
 const LoginPage = () => {
   return (
