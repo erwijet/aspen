@@ -25,7 +25,7 @@ export const useAuth = create<AuthGrpcStore>()(
     init: () =>
       set((store) => {
         const channel = createChannel(
-          "http://aspn-trunk-grpc.erwijet.com:9000"
+          "https://trunk.aspn.app"
         );
         store.client = createClient(AuthorizationDefinition, channel);
         store.ready = true;
