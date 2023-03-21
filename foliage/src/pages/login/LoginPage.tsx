@@ -1,5 +1,5 @@
 import NavBar from "@/shared/NavBar";
-import { useAuth } from "@/shared/useAuth";
+import { useAuthClient } from "@/shared/auth";
 import {
   TextInput,
   PasswordInput,
@@ -24,7 +24,7 @@ const LoginPage = () => {
     },
   });
 
-  const auth = useAuth();
+  const auth = useAuthClient();
   const nav = useNavigate();
 
   async function login() {

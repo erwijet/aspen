@@ -1,5 +1,5 @@
 import NavBar from "@/shared/NavBar";
-import { useAuth } from "@/shared/useAuth";
+import { useAuthClient } from "@/shared/auth";
 import {
   TextInput,
   PasswordInput,
@@ -36,7 +36,7 @@ const RegisterPage = () => {
     validateInputOnChange: true,
   });
 
-  const auth = useAuth();
+  const auth = useAuthClient();
   const nav = useNavigate();
 
   useEffect(() => {

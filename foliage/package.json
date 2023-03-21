@@ -17,6 +17,7 @@
     "@tabler/icons-react": "^2.10.0",
     "framer-motion": "^10.2.4",
     "immer": "^9.0.19",
+    "jsonwebtoken": "^9.0.0",
     "nice-grpc-common": "^2.0.1",
     "nice-grpc-web": "^3.1.0",
     "protobufjs": "^7.2.2",
@@ -27,6 +28,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/react-router-dom": "^5.3.3",
@@ -35,6 +37,7 @@
     "grpc_tools_node_protoc_ts": "^5.3.3",
     "ts-proto": "^1.141.1",
     "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "vite-plugin-node-polyfills": "^0.7.0"
   }
 }

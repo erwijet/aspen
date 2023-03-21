@@ -11,9 +11,12 @@ import {
 } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import RegisterPage from "./pages/register/RegisterPage";
-import { useAuth } from "./shared/useAuth";
+import { useAuthClient } from "./shared/auth";
+import ConsolePage from "./pages/console/ConsolePage";
+import { useLinksClient } from "./shared/links";
 
-useAuth.getState().init();
+useAuthClient.getState().init();
+useLinksClient.getState().init();
 
 const router = createBrowserRouter([
   {
@@ -31,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />
+  },
+  {
+    path: "/console",
+    element: <ConsolePage />
   }
 ]);
 
