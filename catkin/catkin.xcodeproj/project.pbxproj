@@ -1,0 +1,415 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2F07B94729CFDFCC00B7DE22 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F07B94629CFDFCC00B7DE22 /* Images.xcassets */; };
+		2F07B94C29D0A26000B7DE22 /* AuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F07B94B29D0A26000B7DE22 /* AuthClient.swift */; };
+		2F07B95029D0A3E500B7DE22 /* trunk.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F07B94E29D0A3E500B7DE22 /* trunk.grpc.swift */; };
+		2F07B95129D0A3E500B7DE22 /* trunk.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F07B94F29D0A3E500B7DE22 /* trunk.pb.swift */; };
+		2F0DA61929D7D4A00055E932 /* AspenAuthority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DA61829D7D4A00055E932 /* AspenAuthority.swift */; };
+		2F3DACCD29CFD8CA0089632F /* catkinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DACCC29CFD8CA0089632F /* catkinApp.swift */; };
+		2F3DACCF29CFD8CA0089632F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DACCE29CFD8CA0089632F /* ContentView.swift */; };
+		2F3DACD129CFD8CB0089632F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F3DACD029CFD8CB0089632F /* Assets.xcassets */; };
+		2F3DACD429CFD8CB0089632F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F3DACD329CFD8CB0089632F /* Preview Assets.xcassets */; };
+		2F3DACDB29CFDB2C0089632F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DACDA29CFDB2C0089632F /* LoginView.swift */; };
+		2F48F5BC29D514D7001CB29F /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 2F48F5BB29D514D7001CB29F /* GRPC */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2F07B94629CFDFCC00B7DE22 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		2F07B94B29D0A26000B7DE22 /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
+		2F07B94E29D0A3E500B7DE22 /* trunk.grpc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = trunk.grpc.swift; sourceTree = "<group>"; };
+		2F07B94F29D0A3E500B7DE22 /* trunk.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = trunk.pb.swift; sourceTree = "<group>"; };
+		2F07B95529D0B01A00B7DE22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2F0DA61829D7D4A00055E932 /* AspenAuthority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspenAuthority.swift; sourceTree = "<group>"; };
+		2F3DACC929CFD8CA0089632F /* catkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = catkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F3DACCC29CFD8CA0089632F /* catkinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = catkinApp.swift; sourceTree = "<group>"; };
+		2F3DACCE29CFD8CA0089632F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2F3DACD029CFD8CB0089632F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2F3DACD329CFD8CB0089632F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2F3DACDA29CFDB2C0089632F /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2F3DACC629CFD8CA0089632F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F48F5BC29D514D7001CB29F /* GRPC in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2F07B94A29D0A23A00B7DE22 /* clients */ = {
+			isa = PBXGroup;
+			children = (
+				2F07B94B29D0A26000B7DE22 /* AuthClient.swift */,
+			);
+			path = clients;
+			sourceTree = "<group>";
+		};
+		2F07B94D29D0A39100B7DE22 /* protobuf */ = {
+			isa = PBXGroup;
+			children = (
+				2F07B94E29D0A3E500B7DE22 /* trunk.grpc.swift */,
+				2F07B94F29D0A3E500B7DE22 /* trunk.pb.swift */,
+			);
+			path = protobuf;
+			sourceTree = "<group>";
+		};
+		2F3DACC029CFD8CA0089632F = {
+			isa = PBXGroup;
+			children = (
+				2F07B94D29D0A39100B7DE22 /* protobuf */,
+				2F07B94A29D0A23A00B7DE22 /* clients */,
+				2F07B94629CFDFCC00B7DE22 /* Images.xcassets */,
+				2F3DACCB29CFD8CA0089632F /* catkin */,
+				2F3DACCA29CFD8CA0089632F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2F3DACCA29CFD8CA0089632F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2F3DACC929CFD8CA0089632F /* catkin.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2F3DACCB29CFD8CA0089632F /* catkin */ = {
+			isa = PBXGroup;
+			children = (
+				2F07B95529D0B01A00B7DE22 /* Info.plist */,
+				2F3DACCC29CFD8CA0089632F /* catkinApp.swift */,
+				2F3DACCE29CFD8CA0089632F /* ContentView.swift */,
+				2F3DACD029CFD8CB0089632F /* Assets.xcassets */,
+				2F3DACD229CFD8CB0089632F /* Preview Content */,
+				2F3DACDA29CFDB2C0089632F /* LoginView.swift */,
+				2F0DA61829D7D4A00055E932 /* AspenAuthority.swift */,
+			);
+			path = catkin;
+			sourceTree = "<group>";
+		};
+		2F3DACD229CFD8CB0089632F /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2F3DACD329CFD8CB0089632F /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2F3DACC829CFD8CA0089632F /* catkin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2F3DACD729CFD8CB0089632F /* Build configuration list for PBXNativeTarget "catkin" */;
+			buildPhases = (
+				2F3DACC529CFD8CA0089632F /* Sources */,
+				2F3DACC629CFD8CA0089632F /* Frameworks */,
+				2F3DACC729CFD8CA0089632F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = catkin;
+			packageProductDependencies = (
+				2F48F5BB29D514D7001CB29F /* GRPC */,
+			);
+			productName = catkin;
+			productReference = 2F3DACC929CFD8CA0089632F /* catkin.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2F3DACC129CFD8CA0089632F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					2F3DACC829CFD8CA0089632F = {
+						CreatedOnToolsVersion = 14.2;
+					};
+				};
+			};
+			buildConfigurationList = 2F3DACC429CFD8CA0089632F /* Build configuration list for PBXProject "catkin" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2F3DACC029CFD8CA0089632F;
+			packageReferences = (
+				2F48F5BA29D514D7001CB29F /* XCRemoteSwiftPackageReference "grpc-swift" */,
+			);
+			productRefGroup = 2F3DACCA29CFD8CA0089632F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2F3DACC829CFD8CA0089632F /* catkin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2F3DACC729CFD8CA0089632F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F07B94729CFDFCC00B7DE22 /* Images.xcassets in Resources */,
+				2F3DACD429CFD8CB0089632F /* Preview Assets.xcassets in Resources */,
+				2F3DACD129CFD8CB0089632F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2F3DACC529CFD8CA0089632F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F07B95029D0A3E500B7DE22 /* trunk.grpc.swift in Sources */,
+				2F07B94C29D0A26000B7DE22 /* AuthClient.swift in Sources */,
+				2F3DACDB29CFDB2C0089632F /* LoginView.swift in Sources */,
+				2F07B95129D0A3E500B7DE22 /* trunk.pb.swift in Sources */,
+				2F3DACCF29CFD8CA0089632F /* ContentView.swift in Sources */,
+				2F3DACCD29CFD8CA0089632F /* catkinApp.swift in Sources */,
+				2F0DA61929D7D4A00055E932 /* AspenAuthority.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2F3DACD529CFD8CB0089632F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2F3DACD629CFD8CB0089632F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2F3DACD829CFD8CB0089632F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"catkin/Preview Content\"";
+				DEVELOPMENT_TEAM = UAU33DL52X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = catkin/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.aspn.catkin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2F3DACD929CFD8CB0089632F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"catkin/Preview Content\"";
+				DEVELOPMENT_TEAM = UAU33DL52X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = catkin/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.aspn.catkin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2F3DACC429CFD8CA0089632F /* Build configuration list for PBXProject "catkin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F3DACD529CFD8CB0089632F /* Debug */,
+				2F3DACD629CFD8CB0089632F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2F3DACD729CFD8CB0089632F /* Build configuration list for PBXNativeTarget "catkin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F3DACD829CFD8CB0089632F /* Debug */,
+				2F3DACD929CFD8CB0089632F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2F48F5BA29D514D7001CB29F /* XCRemoteSwiftPackageReference "grpc-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/grpc/grpc-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2F48F5BB29D514D7001CB29F /* GRPC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F48F5BA29D514D7001CB29F /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = GRPC;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2F3DACC129CFD8CA0089632F /* Project object */;
+}
