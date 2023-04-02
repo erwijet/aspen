@@ -1,4 +1,4 @@
-use futures::TryStreamExt;
+use futures::{StreamExt, TryStreamExt};
 use std::{env, str::FromStr};
 
 use mongodb::{
@@ -6,7 +6,7 @@ use mongodb::{
   options::{
     AggregateOptions, ClientOptions, FindOneAndDeleteOptions, FindOneOptions, InsertOneOptions,
   },
-  Client, Collection,
+  Client, Collection, results::UpdateResult,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -162,8 +162,6 @@ impl AspenDB {
     query: String,
     username: String,
   ) -> Result<Vec<Link>, mongodb::error::Error> {
-    println!("running search. q={}, usr={}", query, username);
-
     let results: Vec<Link> = self
       .collection::<Link>("links")
       .aggregate(
@@ -200,12 +198,31 @@ impl AspenDB {
   }
 
   pub async fn get_link(&self, link_id: &str) -> Result<Option<Link>, mongodb::error::Error> {
-    let res = self
-      .collection::<Link>("links")
-      .find_one(doc! { "_id": ObjectId::from_str(&link_id).unwrap() }, None)
-      .await?;
+    // let res = self
+    //   .collection::<Link>("links")
+    //   .find_one(doc! { "_id": ObjectId::from_str(&link_id).unwrap() }, None)
+    //   .await?;
 
-    Ok(res)
+    self
+      .collection::<Link>("links")
+      .aggregate(
+        vec![
+          doc! {
+            "$match": {
+              "_id": ObjectId::from_str(link_id).unwrap()
+            }
+          },
+          doc! {
+            "$limit": 1
+          },
+        ],
+        AggregateOptions::default(),
+      )
+      .await?
+      .next()
+      .await
+      .transpose()
+      .map(|inner| inner.map(Link::from))
   }
 
   pub async fn get_all_links(&self, username: &str) -> Result<Vec<Link>, mongodb::error::Error> {
@@ -254,13 +271,24 @@ impl AspenDB {
     })
   }
 
-  pub async fn update_link(&self, link: crate::db::Link) -> Result<Link, mongodb::error::Error> {
+  pub async fn update_link(&self, link: crate::db::Link) -> Result<UpdateResult, mongodb::error::Error> {
     let link_id = ObjectId::from_str(&link._id).unwrap();
-    let doc: Document = link.into();
 
-    self.collection::<Link>("links").update_one(doc! { "_id": link_id }, doc.clone(), None).await?;
+    let res = self
+      .collection::<Link>("links")
+      .update_one(
+        doc! { "_id": link_id },
+        doc! {
+          "$set": {
+            "url": link.url,
+            "keywords": link.keywords
+          }
+        },
+        None,
+      )
+      .await?;
 
-    Ok(doc.into())
+    Ok(res)
   }
 
   pub async fn delete_link(&self, _id: &str) -> Result<(), mongodb::error::Error> {

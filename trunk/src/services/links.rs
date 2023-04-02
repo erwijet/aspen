@@ -95,6 +95,9 @@ impl Links for LinksService {
 
     let proto::Link { id, keywords, url } = update.unwrap();
 
+    check_field!(id);
+    check_field!(url);
+
     if id != link_id {
       return Err(Status::invalid_argument("_id mutations not permitted"));
     }
@@ -106,7 +109,7 @@ impl Links for LinksService {
       .await
       .map_err(IntoStatus::into_status)?;
 
-    Ok(Response::new(UpdateLinkResponse { link: Some(res.into()) }))
+    Ok(Response::new(UpdateLinkResponse { documents_updated: res.modified_count.try_into().unwrap() }))
   }
 
   async fn delete(&self, req: Request<DeleteLinkRequest>) -> Result<Response<Empty>, Status> {

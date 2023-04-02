@@ -79,7 +79,7 @@ message UpdateLinkRequest {
 }
 
 message UpdateLinkResponse {
-    Link link = 2;
+    int32 documents_updated = 1;
 }
 
 message DeleteLinkRequest {
