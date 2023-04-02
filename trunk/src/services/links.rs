@@ -35,12 +35,8 @@ impl Links for LinksService {
     check_field!(username);
     check_field!(query);
 
-    let results = DB
-      .get()
-      .await
-      .search_links(query, username)
-      .await
-      .map_err(IntoStatus::into_status)?;
+    let results =
+      DB.get().await.search_links(query, username).await.map_err(IntoStatus::into_status)?;
 
     Ok(Response::new(LinksResponse {
       results: results.into_iter().map(|link| link.into()).collect(),
@@ -93,23 +89,33 @@ impl Links for LinksService {
       return Err(Status::permission_denied("no ownership"));
     }
 
-    let proto::Link { id, keywords, url } = update.unwrap();
+    let proto::Link { id, keywords: update_keywords, url: update_url } = update.unwrap();
 
-    check_field!(id);
-    check_field!(url);
-
-    if id != link_id {
-      return Err(Status::invalid_argument("_id mutations not permitted"));
+    if !id.is_empty() && id != link_id {
+      return Err(Status::failed_precondition("id is an immutable field"));
     }
 
     let res = DB
       .get()
       .await
-      .update_link(Link { _id: id, url, keywords, account: username })
+      .update_link(Link {
+        _id: link_id,
+        account: username,
+        url: match update_url {
+          url if !url.is_empty() => url,
+          _ => link.url,
+        },
+        keywords: match update_keywords {
+          keywords if keywords.len() > 0 => keywords,
+          _ => link.keywords,
+        },
+      })
       .await
       .map_err(IntoStatus::into_status)?;
 
-    Ok(Response::new(UpdateLinkResponse { documents_updated: res.modified_count.try_into().unwrap() }))
+    Ok(Response::new(UpdateLinkResponse {
+      documents_updated: res.modified_count.try_into().unwrap(),
+    }))
   }
 
   async fn delete(&self, req: Request<DeleteLinkRequest>) -> Result<Response<Empty>, Status> {
@@ -130,11 +136,7 @@ impl Links for LinksService {
       return Err(Status::permission_denied("no ownership"));
     }
 
-    DB.get()
-      .await
-      .delete_link(&link_id)
-      .await
-      .map_err(IntoStatus::into_status)?;
+    DB.get().await.delete_link(&link_id).await.map_err(IntoStatus::into_status)?;
 
     Ok(Response::new(Empty {}))
   }
