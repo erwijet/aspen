@@ -33,12 +33,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <RegisterPage />
+    element: <RegisterPage />,
   },
   {
     path: "/console",
-    element: <ConsolePage />
-  }
+    element: <ConsolePage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

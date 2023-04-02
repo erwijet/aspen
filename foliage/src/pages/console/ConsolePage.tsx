@@ -54,10 +54,10 @@ const ConsolePage = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             size="md"
-            left={'https://api.aspn.app/search/username?q='}
+            left={"https://api.aspn.app/search/username?q="}
             rightSection={
               <ActionIcon
-                disabled={query == ''}
+                disabled={query == ""}
                 type="submit"
                 size={32}
                 radius="md"

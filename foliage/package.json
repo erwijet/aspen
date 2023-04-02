@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm run protos:gen && tsc && vite build",
+    "format": "pnpm prettier -w src/*",
     "preview": "vite preview",
     "protos:gen": "rm -rf vendor && mkdir vendor && sh protoc.sh"
   },
