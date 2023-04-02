@@ -6,7 +6,8 @@ use mongodb::{
   options::{
     AggregateOptions, ClientOptions, FindOneAndDeleteOptions, FindOneOptions, InsertOneOptions,
   },
-  Client, Collection, results::UpdateResult,
+  results::{DeleteResult, UpdateResult},
+  Client, Collection,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -197,7 +198,7 @@ impl AspenDB {
     Ok(results)
   }
 
-  pub async fn get_link(&self, link_id: &str) -> Result<Option<Link>, mongodb::error::Error> {
+  pub async fn get_link(&self, _id: ObjectId) -> Result<Option<Link>, mongodb::error::Error> {
     // let res = self
     //   .collection::<Link>("links")
     //   .find_one(doc! { "_id": ObjectId::from_str(&link_id).unwrap() }, None)
@@ -209,7 +210,7 @@ impl AspenDB {
         vec![
           doc! {
             "$match": {
-              "_id": ObjectId::from_str(link_id).unwrap()
+              "_id": _id
             }
           },
           doc! {
@@ -271,7 +272,10 @@ impl AspenDB {
     })
   }
 
-  pub async fn update_link(&self, link: crate::db::Link) -> Result<UpdateResult, mongodb::error::Error> {
+  pub async fn update_link(
+    &self,
+    link: crate::db::Link,
+  ) -> Result<UpdateResult, mongodb::error::Error> {
     let link_id = ObjectId::from_str(&link._id).unwrap();
 
     let res = self
@@ -291,11 +295,7 @@ impl AspenDB {
     Ok(res)
   }
 
-  pub async fn delete_link(&self, _id: &str) -> Result<(), mongodb::error::Error> {
-    let link_id = ObjectId::from_str(_id).unwrap();
-
-    self.collection::<Link>("link").delete_one(doc! { "_id": link_id }, None).await?;
-
-    Ok(())
+  pub async fn delete_link(&self, _id: &ObjectId) -> Result<DeleteResult, mongodb::error::Error> {
+    self.collection::<Link>("links").delete_one(doc! { "_id": _id }, None).await
   }
 }

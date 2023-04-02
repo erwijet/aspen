@@ -54,7 +54,7 @@ service Links {
     rpc search (SearchLinksRequest) returns (LinksResponse);
     rpc get_all (GetAllLinksRequest) returns (LinksResponse);
     rpc update (UpdateLinkRequest) returns (UpdateLinkResponse);
-    rpc delete (DeleteLinkRequest) returns (Empty);
+    rpc delete (DeleteLinkRequest) returns (DeleteLinkResponse);
     rpc create (CreateLinkRequest) returns (CreateLinkResponse);
 }
 
@@ -79,12 +79,16 @@ message UpdateLinkRequest {
 }
 
 message UpdateLinkResponse {
-    int32 documents_updated = 1;
+    uint32 documents_updated = 1;
 }
 
 message DeleteLinkRequest {
     Authority authority = 1;
     string link_id = 2;
+}
+
+message DeleteLinkResponse {
+  uint32 documents_deleted = 1;
 }
 
 message CreateLinkRequest {

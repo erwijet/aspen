@@ -1,3 +1,6 @@
+use std::str::FromStr;
+
+use mongodb::bson::oid::ObjectId;
 use tonic::{Request, Response, Status};
 
 use crate::{
@@ -5,8 +8,9 @@ use crate::{
   db::Link,
   jwt::JwtSubject,
   proto::{
-    self, links_server::Links, CreateLinkRequest, CreateLinkResponse, DeleteLinkRequest, Empty,
-    GetAllLinksRequest, LinksResponse, SearchLinksRequest, UpdateLinkRequest, UpdateLinkResponse,
+    self, links_server::Links, CreateLinkRequest, CreateLinkResponse, DeleteLinkRequest,
+    DeleteLinkResponse, GetAllLinksRequest, LinksResponse, SearchLinksRequest, UpdateLinkRequest,
+    UpdateLinkResponse,
   },
   DB,
 };
@@ -18,6 +22,12 @@ trait IntoStatus {
 impl IntoStatus for mongodb::error::Error {
   fn into_status(self) -> Status {
     Status::internal(format!("{:?}", self))
+  }
+}
+
+impl IntoStatus for mongodb::bson::oid::Error {
+  fn into_status(self) -> Status {
+    Status::failed_precondition(format!("Failed to parse OID: {:?}", self))
   }
 }
 
@@ -80,7 +90,7 @@ impl Links for LinksService {
     let link = DB
       .get()
       .await
-      .get_link(&link_id)
+      .get_link(ObjectId::from_str(link_id.as_str()).map_err(IntoStatus::into_status)?)
       .await
       .map_err(IntoStatus::into_status)?
       .ok_or(Status::not_found(format!("not found: {}", link_id)))?;
@@ -118,7 +128,10 @@ impl Links for LinksService {
     }))
   }
 
-  async fn delete(&self, req: Request<DeleteLinkRequest>) -> Result<Response<Empty>, Status> {
+  async fn delete(
+    &self,
+    req: Request<DeleteLinkRequest>,
+  ) -> Result<Response<DeleteLinkResponse>, Status> {
     let DeleteLinkRequest { authority, link_id } = req.into_inner();
     let username = authority.usr()?;
 
@@ -127,7 +140,7 @@ impl Links for LinksService {
     let link = DB
       .get()
       .await
-      .get_link(&link_id)
+      .get_link(ObjectId::from_str(link_id.as_str()).map_err(IntoStatus::into_status)?)
       .await
       .map_err(IntoStatus::into_status)?
       .ok_or(Status::not_found(format!("not found: {}", link_id)))?;
@@ -136,9 +149,12 @@ impl Links for LinksService {
       return Err(Status::permission_denied("no ownership"));
     }
 
-    DB.get().await.delete_link(&link_id).await.map_err(IntoStatus::into_status)?;
+    let oid = ObjectId::from_str(&link_id).map_err(IntoStatus::into_status)?;
+    let res = DB.get().await.delete_link(&oid).await.map_err(IntoStatus::into_status)?;
 
-    Ok(Response::new(Empty {}))
+    Ok(Response::new(DeleteLinkResponse {
+      documents_deleted: res.deleted_count.try_into().unwrap(),
+    }))
   }
 
   async fn create(
