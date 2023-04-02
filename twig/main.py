@@ -17,7 +17,7 @@ async def index():
 
 
 @app.get("/search/{username}")
-async def resolve_link_query(username: str, q: str):
+async def resolve_link_query(username: str, q: str, fallback: str = "https://www.google.com/search?q=") -> RedirectResponse:
     try:
         url, *_ = [result.url for result in links.search(trunk_pb2.SearchLinksRequest(
             username=username, query=q)).results]
@@ -26,4 +26,4 @@ async def resolve_link_query(username: str, q: str):
 
     # if we cannot unpack the result list, it must be empty
     except ValueError:
-        return RedirectResponse(f"https://www.google.com/search?q={q}")
+        return RedirectResponse(f"{fallback}{q}")
