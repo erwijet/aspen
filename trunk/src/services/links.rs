@@ -40,7 +40,7 @@ impl Links for LinksService {
       .await
       .search_links(query, username)
       .await
-      .map_err(|err| Status::internal(format!("{:?}", err)))?;
+      .map_err(IntoStatus::into_status)?;
 
     Ok(Response::new(LinksResponse {
       results: results.into_iter().map(|link| link.into()).collect(),
@@ -54,9 +54,6 @@ impl Links for LinksService {
     let GetAllLinksRequest { authority } = req.into_inner();
     let username = authority.usr()?;
 
-    println!("-- REQUEST FOR ALL LINKS --");
-    println!("user: {}", username);
-
     let results: Vec<proto::Link> = DB
       .get()
       .await
@@ -66,8 +63,6 @@ impl Links for LinksService {
       .into_iter()
       .map(Link::into)
       .collect();
-
-    println!("{:?}", results);
 
     Ok(Response::new(LinksResponse { results }))
   }
@@ -91,7 +86,7 @@ impl Links for LinksService {
       .await
       .get_link(&link_id)
       .await
-      .map_err(|err| Status::internal(format!("{}", err)))?
+      .map_err(IntoStatus::into_status)?
       .ok_or(Status::not_found(format!("not found: {}", link_id)))?;
 
     if link.account != username {
@@ -109,7 +104,7 @@ impl Links for LinksService {
       .await
       .update_link(Link { _id: id, url, keywords, account: username })
       .await
-      .map_err(|err| Status::internal(format!("{}", err)))?;
+      .map_err(IntoStatus::into_status)?;
 
     Ok(Response::new(UpdateLinkResponse { link: Some(res.into()) }))
   }
@@ -125,7 +120,7 @@ impl Links for LinksService {
       .await
       .get_link(&link_id)
       .await
-      .map_err(|err| Status::internal(format!("{}", err)))?
+      .map_err(IntoStatus::into_status)?
       .ok_or(Status::not_found(format!("not found: {}", link_id)))?;
 
     if link.account != username {
@@ -136,7 +131,7 @@ impl Links for LinksService {
       .await
       .delete_link(&link_id)
       .await
-      .map_err(|err| Status::internal(format!("{}", err)))?;
+      .map_err(IntoStatus::into_status)?;
 
     Ok(Response::new(Empty {}))
   }
@@ -155,7 +150,7 @@ impl Links for LinksService {
       .await
       .create_link(&username, &url, &keywords)
       .await
-      .map_err(|err| Status::internal(format!("{}", err)))?;
+      .map_err(IntoStatus::into_status)?;
 
     Ok(Response::new(CreateLinkResponse { link: Some(link.into()) }))
   }
