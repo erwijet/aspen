@@ -1,14 +1,25 @@
 use tonic::{Request, Response, Status};
 
 use crate::{
+  check_field,
   db::Link,
   jwt::JwtSubject,
   proto::{
     self, links_server::Links, CreateLinkRequest, CreateLinkResponse, DeleteLinkRequest, Empty,
-    SearchLinksRequest, SearchLinksResponse, UpdateLinkRequest, UpdateLinkResponse,
+    GetAllLinksRequest, LinksResponse, SearchLinksRequest, UpdateLinkRequest, UpdateLinkResponse,
   },
-  DB, check_field,
+  DB,
 };
+
+trait IntoStatus {
+  fn into_status(self) -> Status;
+}
+
+impl IntoStatus for mongodb::error::Error {
+  fn into_status(self) -> Status {
+    Status::internal(format!("{:?}", self))
+  }
+}
 
 #[derive(Debug, Default)]
 pub struct LinksService {}
@@ -18,7 +29,7 @@ impl Links for LinksService {
   async fn search(
     &self,
     req: Request<SearchLinksRequest>,
-  ) -> Result<Response<SearchLinksResponse>, Status> {
+  ) -> Result<Response<LinksResponse>, Status> {
     let SearchLinksRequest { username, query, .. } = req.into_inner();
 
     check_field!(username);
@@ -31,9 +42,34 @@ impl Links for LinksService {
       .await
       .map_err(|err| Status::internal(format!("{:?}", err)))?;
 
-    Ok(Response::new(SearchLinksResponse {
+    Ok(Response::new(LinksResponse {
       results: results.into_iter().map(|link| link.into()).collect(),
     }))
+  }
+
+  async fn get_all(
+    &self,
+    req: Request<GetAllLinksRequest>,
+  ) -> Result<Response<LinksResponse>, Status> {
+    let GetAllLinksRequest { authority } = req.into_inner();
+    let username = authority.usr()?;
+
+    println!("-- REQUEST FOR ALL LINKS --");
+    println!("user: {}", username);
+
+    let results: Vec<proto::Link> = DB
+      .get()
+      .await
+      .get_all_links(&username)
+      .await
+      .map_err(IntoStatus::into_status)?
+      .into_iter()
+      .map(Link::into)
+      .collect();
+
+    println!("{:?}", results);
+
+    Ok(Response::new(LinksResponse { results }))
   }
 
   async fn update(

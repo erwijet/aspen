@@ -1,4 +1,4 @@
-use futures::StreamExt;
+use futures::TryStreamExt;
 use std::{env, str::FromStr};
 
 use mongodb::{
@@ -164,7 +164,7 @@ impl AspenDB {
   ) -> Result<Vec<Link>, mongodb::error::Error> {
     println!("running search. q={}, usr={}", query, username);
 
-    let mut cursor = self
+    let results: Vec<Link> = self
       .collection::<Link>("links")
       .aggregate(
         vec![
@@ -190,15 +190,13 @@ impl AspenDB {
         ],
         AggregateOptions::default(),
       )
+      .await?
+      .into_stream()
+      .map_ok(|doc| doc.into())
+      .try_collect()
       .await?;
 
-    let mut links = vec![];
-
-    while let Some(doc) = cursor.next().await {
-      links.push(doc?.into());
-    }
-
-    Ok(links)
+    Ok(results)
   }
 
   pub async fn get_link(&self, link_id: &str) -> Result<Option<Link>, mongodb::error::Error> {
@@ -208,6 +206,26 @@ impl AspenDB {
       .await?;
 
     Ok(res)
+  }
+
+  pub async fn get_all_links(&self, username: &str) -> Result<Vec<Link>, mongodb::error::Error> {
+    let results: Vec<Link> = self
+      .collection::<Link>("links")
+      .aggregate(
+        vec![doc! {
+          "$match": {
+            "account": username
+          }
+        }],
+        AggregateOptions::default(),
+      )
+      .await?
+      .into_stream()
+      .map_ok(Document::into)
+      .try_collect()
+      .await?;
+
+    Ok(results)
   }
 
   pub async fn create_link(
