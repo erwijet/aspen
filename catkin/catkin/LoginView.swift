@@ -7,25 +7,39 @@
 
 import SwiftUI
 
+extension LoginView {
+    @MainActor class ViewModel: ObservableObject {
+        var onLoginSuccess: ((_ jwt: String) -> Void)
+        
+        init(_ onLoginSuccess: @escaping ((_ jwt: String) -> Void)) {
+            self.onLoginSuccess = onLoginSuccess
+        }
+        
+        @Published var username: String = ""
+        @Published var password: String = ""
+        @Published var loading = false
+        
+        func login() {
+            let client = AuthClient()
+            let resp = client.login(username: username, password: password)
+            
+            if resp != "" {
+                onLoginSuccess(resp)
+            }
+        }
+    }
+}
+
 struct LoginView: View {
-    var onLoginSuccess: ((_ jwt: String) -> Void)
-    
-    @State private var username: String = ""
-    @State private var password: String = ""
-    @State private var loading = false
-    
     @Environment(\.colorScheme)
     private var colorScheme
     
+    var onLoginSuccess: ((_ jwt: String) -> Void)
+    @StateObject var viewModel: ViewModel
     
-    func login() {
-        print("running!")
-        let client = AuthClient()
-        let resp = client.login(username: username, password: password)
-        
-        if resp != "" {
-            onLoginSuccess(resp)
-        }
+    init(onLoginSuccess: @escaping (_ jwt: String) -> Void) {
+        self.onLoginSuccess = onLoginSuccess
+        self._viewModel =  StateObject(wrappedValue: ViewModel(onLoginSuccess))
     }
     
     var body: some View {
@@ -50,41 +64,39 @@ struct LoginView: View {
                     .fontWeight(.bold)
                     .padding(.bottom, 50)
                 
-                TextField("Username", text: $username)
+                TextField("Username", text: $viewModel.username)
                     .padding()
                     .textInputAutocapitalization(.never) .autocorrectionDisabled()
                     .background(Color(.systemGray6))
                     .cornerRadius(5.0)
                     .padding(.bottom, 20)
                 
-                SecureField("Password", text: $password)
+                SecureField("Password", text: $viewModel.password)
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(5.0)
                     .padding(.bottom, 20)
                 
                 Button(action: {
-                    loading.toggle()
+                    viewModel.loading.toggle()
                     print("running!")
                     
                     DispatchQueue.main.async {
-                        login()
-                        loading.toggle()
+                        viewModel.login()
+                        viewModel.loading.toggle()
                     }
-                    
-                    //                onLoginSuccess?()
                 }) {
                     Text("Log in")
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue.opacity(username == "" || password == "" || loading ? 0.5 : 1.0))
+                        .background(Color.blue.opacity(viewModel.username == "" || viewModel.password == "" || viewModel.loading ? 0.5 : 1.0))
                         .cornerRadius(5.0)
-                }.disabled(loading || username == "" || password == "")
+                }.disabled(viewModel.loading || viewModel.username == "" || viewModel.password == "")
             }
             .padding()
             
-            if loading {
+            if viewModel.loading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
                     .padding()

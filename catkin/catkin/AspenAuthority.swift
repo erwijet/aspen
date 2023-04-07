@@ -41,17 +41,25 @@ extension String {
     }
 }
 
+extension Aspen_Trunk_Authority {
+    init(aspenAuthority: AspenAuthority) {
+        self = Aspen_Trunk_Authority()
+        self.jwt = aspenAuthority.jwt
+    }
+}
+
 struct AspenAuthority {
     let firstName: String
     let lastName: String
     let userId: String
     let username: String
+    let jwt: String
     
-    init?(from jwt: String?) {
+    init?(jwt: String?) {
         guard let jwt = jwt else { return nil }
         let claims = try! jwt.jwtDecoded()
-        print(claims)
         
+        self.jwt = jwt
         self.firstName = claims["firstname"] as? String ?? ""
         self.lastName = claims["lastname"] as? String ?? ""
         self.userId = claims["sub"] as? String ?? ""
