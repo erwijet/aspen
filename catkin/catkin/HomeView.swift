@@ -10,6 +10,7 @@ import SwiftUI
 extension HomeView {
     @MainActor class ViewModel: ObservableObject {
         private let authority: AspenAuthority
+        private let linksClient: Aspen_Trunk_LinksNIOClient = .init(channel: AspenTrunk.shared.channel)
         
         init (_ authority: AspenAuthority) {
             self.authority = authority
@@ -19,15 +20,9 @@ extension HomeView {
         @Published var links: [Aspen_Trunk_Link] = []
         
         func refreshLinks() {
-            //        let client = AuthClient()
-            //        let resp = client.login(username: username, password: password)
-            //
-            //        if resp != "" {
-            //            onLoginSuccess(resp)
-            //        }
-            
-            let client = LinksClient()
-            links = client.getAll(authority: authority)
+            links = try! linksClient.get_all(.with { req in
+                req.authority = Aspen_Trunk_Authority(aspenAuthority: authority)
+            }).response.wait().results;
         }
     }
 }

@@ -7,6 +7,7 @@ import {
   Avatar,
   Popover,
   Menu,
+  UnstyledButton,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "./auth";
@@ -32,16 +33,22 @@ const NavBar = () => {
         {session.authed ? (
           <Menu width={200} shadow={"md"}>
             <Menu.Target>
-              <Avatar>{session.firstname[0] + session.lastname[0]}</Avatar>
+              <UnstyledButton>
+                <Avatar style={{ cursor: "pointer" }}>
+                  {session.firstname[0] + session.lastname[0]}
+                </Avatar>
+              </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Account</Menu.Label>
-              <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
+              <Menu.Item type="button" icon={<IconSettings size={14} />}>
+                <UnstyledButton>Settings</UnstyledButton>
+              </Menu.Item>
               <Menu.Item
                 icon={<IconLogout size={14} />}
                 onClick={() => logout()}
               >
-                Logout
+                <UnstyledButton>Logout</UnstyledButton>
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>

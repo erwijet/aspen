@@ -20,11 +20,15 @@ extension LoginView {
         @Published var loading = false
         
         func login() {
-            let client = AuthClient()
-            let resp = client.login(username: username, password: password)
+            let client = Aspen_Trunk_AuthorizationNIOClient(channel: AspenTrunk.shared.channel)
             
-            if resp != "" {
-                onLoginSuccess(resp)
+            let jwt = try! client.log_in(.with {
+                $0.username = username
+                $0.password = password
+            }).response.wait().authority.jwt;
+            
+            if jwt != "" {
+                onLoginSuccess(jwt)
             }
         }
     }
