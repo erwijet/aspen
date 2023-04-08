@@ -11,6 +11,8 @@ message Link {
     string id = 1;
     string url = 2;
     repeated string keywords = 3;
+    string name = 4;
+    uint64 hits = 5;
 }
 
 service Authorization {
@@ -95,6 +97,7 @@ message CreateLinkRequest {
     Authority authority = 1;
     string url = 2;
     repeated string keywords = 3;
+    string name = 4;
 }
 
 message CreateLinkResponse {

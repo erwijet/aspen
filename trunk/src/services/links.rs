@@ -99,7 +99,13 @@ impl Links for LinksService {
       return Err(Status::permission_denied("no ownership"));
     }
 
-    let proto::Link { id, keywords: update_keywords, url: update_url } = update.unwrap();
+    let proto::Link {
+      id,
+      keywords: update_keywords,
+      url: update_url,
+      name: update_name,
+      ..
+    } = update.unwrap();
 
     if !id.is_empty() && id != link_id {
       return Err(Status::failed_precondition("id is an immutable field"));
@@ -119,6 +125,11 @@ impl Links for LinksService {
           keywords if keywords.len() > 0 => keywords,
           _ => link.keywords,
         },
+        name: match update_name {
+          name if !name.is_empty() => name,
+          _ => link.name
+        },
+        hits: link.hits
       })
       .await
       .map_err(IntoStatus::into_status)?;
@@ -161,15 +172,16 @@ impl Links for LinksService {
     &self,
     req: Request<CreateLinkRequest>,
   ) -> Result<Response<CreateLinkResponse>, Status> {
-    let CreateLinkRequest { authority, url, keywords } = req.into_inner();
+    let CreateLinkRequest { authority, url, keywords, name } = req.into_inner();
     let username = authority.usr()?;
 
     check_field!(url);
+    check_field!(name);
 
     let link = DB
       .get()
       .await
-      .create_link(&username, &url, &keywords)
+      .create_link(&username, &url, &keywords, &name)
       .await
       .map_err(IntoStatus::into_status)?;
 

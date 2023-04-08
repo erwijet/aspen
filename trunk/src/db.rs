@@ -20,6 +20,8 @@ pub struct Link {
   pub account: String,
   pub url: String,
   pub keywords: Vec<String>,
+  pub name: String,
+  pub hits: u64
 }
 
 impl Link {
@@ -29,13 +31,15 @@ impl Link {
       account: username,
       keywords: proto_link.keywords,
       url: proto_link.url,
+      name: proto_link.name,
+      hits: proto_link.hits
     }
   }
 }
 
 impl From<Link> for proto::Link {
   fn from(link: Link) -> Self {
-    Self { id: link._id, url: link.url, keywords: link.keywords }
+    Self { id: link._id, url: link.url, keywords: link.keywords, hits: link.hits, name: link.name }
   }
 }
 
@@ -58,6 +62,8 @@ impl From<Document> for Link {
       _id: doc.get_object_id("_id").unwrap().to_string(),
       account: doc.get_str("account").unwrap().to_string(),
       url: doc.get_str("url").unwrap().to_string(),
+      name: doc.get_str("name").unwrap().to_string(),
+      hits: u64::try_from(doc.get_i64("hits").unwrap()).unwrap(),
       keywords: doc
         .get_array("keywords")
         .unwrap()
@@ -251,6 +257,7 @@ impl AspenDB {
     username: &str,
     url: &str,
     keywords: &Vec<String>,
+    name: &str
   ) -> Result<Link, mongodb::error::Error> {
     let res = self
       .collection("links")
@@ -269,6 +276,8 @@ impl AspenDB {
       account: username.to_owned(),
       url: url.to_owned(),
       keywords: keywords.clone(),
+      name: name.to_string(),
+      hits: 0
     })
   }
 
