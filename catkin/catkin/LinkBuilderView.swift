@@ -25,7 +25,8 @@ extension LinkBuilderView {
         }
         
         @Published var url: String = ""
-        @Published var keywords: [Keyword] = []
+        @Published var name: String = ""
+        @Published var keywords = [Keyword]()
         
         
         func create() {
@@ -58,6 +59,7 @@ struct LinkBuilderView: View {
     
     var body: some View {
         VStack {
+            
             HStack {
                 Text("New Link").font(.title).bold().frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
@@ -66,11 +68,14 @@ struct LinkBuilderView: View {
                 } label: {
                     Text("Done")
                 }.disabled(viewModel.keywords.isEmpty || viewModel.url.isEmpty)
-            }
+            }.padding()
             
             Form {
                 Section(header: Text("Basic")) {
+                    TextField("Name", text: $viewModel.name)
                     TextField("Link To", text: $viewModel.url)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                 }
                 Section(header: Text("Keywords")) {
                     List {
@@ -90,7 +95,7 @@ struct LinkBuilderView: View {
                     }
                 }
             }.scrollContentBackground(.hidden)
-        }.padding(.all, 40)
+        }
     }
     
     func delete(at offsets: IndexSet) {

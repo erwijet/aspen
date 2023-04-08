@@ -11,8 +11,6 @@ struct MainView: View {
     @AppStorage("jwt") var jwt: String?
     @State private var curTabIdx = 0
     
-    private var bgColors: [Color] = [ .indigo, .yellow, .green, .orange, .brown ]
-    
     var body: some View {
         if let authority = AspenAuthority(jwt: jwt) {
             TabView(selection: $curTabIdx) {

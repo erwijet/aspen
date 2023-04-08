@@ -19,6 +19,17 @@ extension HomeView {
         @Published var loading: Bool = false
         @Published var links: [Aspen_Trunk_Link] = []
         
+        func delete(link: Aspen_Trunk_Link) {
+            links.removeAll(where: { cur in
+                cur.id == link.id
+            })
+            
+            let _ = try! linksClient.delete(.with { req in
+                req.authority = Aspen_Trunk_Authority(aspenAuthority: authority)
+                req.linkID = link.id
+            }).response.wait()
+        }
+        
         func refreshLinks() {
             links = try! linksClient.get_all(.with { req in
                 req.authority = Aspen_Trunk_Authority(aspenAuthority: authority)
@@ -45,6 +56,10 @@ struct HomeView: View {
                     Text(self.viewModel.links[idx].url)
                 } label: {
                     Text(self.viewModel.links[idx].url)
+                }.swipeActions {
+                    Button("Delete") {
+                        viewModel.delete(link: self.viewModel.links[idx])
+                    }.tint(.red)
                 }
             }
             .listStyle(.plain)
