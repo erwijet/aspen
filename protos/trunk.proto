@@ -12,7 +12,7 @@ message Link {
     string url = 2;
     repeated string keywords = 3;
     string name = 4;
-    uint64 hits = 5;
+    uint32 hits = 5;
 }
 
 service Authorization {

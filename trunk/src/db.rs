@@ -21,7 +21,7 @@ pub struct Link {
   pub url: String,
   pub keywords: Vec<String>,
   pub name: String,
-  pub hits: u64
+  pub hits: u32
 }
 
 impl Link {
@@ -63,7 +63,7 @@ impl From<Document> for Link {
       account: doc.get_str("account").unwrap().to_string(),
       url: doc.get_str("url").unwrap().to_string(),
       name: doc.get_str("name").unwrap().to_string(),
-      hits: u64::try_from(doc.get_i64("hits").unwrap()).unwrap(),
+      hits: u32::try_from(doc.get_i32("hits").unwrap()).unwrap(),
       keywords: doc
         .get_array("keywords")
         .unwrap()
