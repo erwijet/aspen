@@ -265,7 +265,9 @@ impl AspenDB {
         doc! {
           "account": username,
           "url": url,
-          "keywords": keywords
+          "keywords": keywords,
+          "name": name,
+          "hits": 0
         },
         None,
       )
