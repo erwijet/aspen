@@ -18,6 +18,7 @@
 		2F48F5BC29D514D7001CB29F /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 2F48F5BB29D514D7001CB29F /* GRPC */; };
 		2FA57BE629E0A87B00B7796E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA57BE529E0A87B00B7796E /* HomeView.swift */; };
 		2FA57BE829E0CBD000B7796E /* AspenTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA57BE729E0CBD000B7796E /* AspenTrunk.swift */; };
+		2FA57BEC29E0D76200B7796E /* LinkBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA57BEB29E0D76200B7796E /* LinkBuilderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		2F3DACDA29CFDB2C0089632F /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		2FA57BE529E0A87B00B7796E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2FA57BE729E0CBD000B7796E /* AspenTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspenTrunk.swift; sourceTree = "<group>"; };
+		2FA57BEB29E0D76200B7796E /* LinkBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBuilderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				2F07B95529D0B01A00B7DE22 /* Info.plist */,
 				2F3DACCC29CFD8CA0089632F /* catkinApp.swift */,
 				2FA57BE729E0CBD000B7796E /* AspenTrunk.swift */,
+				2FA57BEB29E0D76200B7796E /* LinkBuilderView.swift */,
 				2F3DACCE29CFD8CA0089632F /* MainView.swift */,
 				2FA57BE529E0A87B00B7796E /* HomeView.swift */,
 				2F3DACD029CFD8CB0089632F /* Assets.xcassets */,
@@ -167,6 +170,7 @@
 			files = (
 				2FA57BE629E0A87B00B7796E /* HomeView.swift in Sources */,
 				2F07B95029D0A3E500B7DE22 /* trunk.grpc.swift in Sources */,
+				2FA57BEC29E0D76200B7796E /* LinkBuilderView.swift in Sources */,
 				2F3DACDB29CFDB2C0089632F /* LoginView.swift in Sources */,
 				2F07B95129D0A3E500B7DE22 /* trunk.pb.swift in Sources */,
 				2F3DACCF29CFD8CA0089632F /* MainView.swift in Sources */,

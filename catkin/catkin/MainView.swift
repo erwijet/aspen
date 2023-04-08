@@ -31,7 +31,6 @@ struct MainView: View {
                     .tag(1)
             }
             .accentColor(Color(UIColor.blue))
-            .padding()
         } else {
             LoginView() {
                 jwt = $0

@@ -29,7 +29,9 @@ extension HomeView {
 
 struct HomeView: View {
     var authority: AspenAuthority
-    @StateObject var viewModel: ViewModel
+    
+    @StateObject private var viewModel: ViewModel
+    @State private var isLinkBuilderOpen: Bool = false
     
     init(authority: AspenAuthority) {
         self.authority = authority
@@ -47,8 +49,27 @@ struct HomeView: View {
             }
             .listStyle(.plain)
             .navigationTitle("My Links")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        isLinkBuilderOpen.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
             .onAppear {
                 if viewModel.links.isEmpty {
+                    viewModel.refreshLinks()
+                }
+            }
+        }
+        
+        .sheet(isPresented: $isLinkBuilderOpen) {
+            VStack {
+                Capsule().fill(Color.secondary).frame(width: 30, height: 3).padding(10)
+                LinkBuilderView(authority) {
+                    isLinkBuilderOpen.toggle()
                     viewModel.refreshLinks()
                 }
             }
