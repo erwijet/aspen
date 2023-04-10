@@ -36,6 +36,7 @@ extension LinkBuilderView {
                 req.authority = Aspen_Trunk_Authority(aspenAuthority: authority)
                 req.url = url
                 req.keywords = keywords.map({ $0.keyword })
+                req.name = name
             }).response.wait()
             
             onCreate?()
@@ -73,6 +74,8 @@ struct LinkBuilderView: View {
             Form {
                 Section(header: Text("Basic")) {
                     TextField("Name", text: $viewModel.name)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                     TextField("Link To", text: $viewModel.url)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)

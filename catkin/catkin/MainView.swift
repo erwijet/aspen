@@ -21,7 +21,7 @@ struct MainView: View {
                     }
                     .tag(0)
                 
-                Text("Settings, \(authority.firstName)")
+                SettingsView(authority: authority)
                     .tabItem {
                         Image(systemName: "person.crop.circle")
                         Text("Settings")
