@@ -9,9 +9,19 @@ import SwiftUI
 
 extension SettingsView {
     class ViewModel: ObservableObject {
-        @Published var firstName: String = "Tyler"
-        @Published var lastName: String = "Holewinski"
-        @Published var username: String = "erwijet"
+        let authority: AspenAuthority
+        
+        @Published var firstName: String
+        @Published var lastName: String
+        @Published var username: String
+        
+        init (_ authority: AspenAuthority) {
+            self.authority = authority
+            self.firstName = self.authority.firstName
+            self.lastName = self.authority.lastName
+            self.username = self.authority.username
+        }
+        
         
         @AppStorage("jwt") var jwt: String?
         
@@ -23,8 +33,12 @@ extension SettingsView {
 
 struct SettingsView: View {
     let authority: AspenAuthority
+    @StateObject var viewModel: ViewModel
     
-    @StateObject var viewModel = ViewModel()
+    init(authority: AspenAuthority) {
+        self.authority = authority
+        _viewModel = StateObject(wrappedValue: ViewModel(authority))
+    }
     
     var body: some View {
         Form {
