@@ -10,11 +10,11 @@ import {
   Navigate,
 } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
-import RegisterPage from "./pages/register/RegisterPage";
-import { useAuthClient } from "./shared/auth";
-import ConsolePage from "./pages/console/ConsolePage";
-import { useLinksClient } from "./shared/links";
-import ManageLinksPage from "./pages/manage/links/ManageLinksPage";
+import RegisterPage from "@/pages/register/RegisterPage";
+import { useAuthClient } from "@/shared/clients/auth";
+import ConsolePage from "@/pages/console/ConsolePage";
+import { useLinksClient } from "@/shared/clients/links";
+import ManageLinksPage from "@/pages/manage/links/ManageLinksPage";
 
 useAuthClient.getState().init();
 useLinksClient.getState().init();

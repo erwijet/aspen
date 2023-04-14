@@ -10,7 +10,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { useSession } from "./auth";
+import { useSession } from "./clients/auth";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
 
 const NavBar = () => {

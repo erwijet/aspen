@@ -1,5 +1,5 @@
 import NavBar from "@/shared/NavBar";
-import { useAuthClient } from "@/shared/auth";
+import { useAuthClient } from "@/shared/clients/auth";
 import {
   TextInput,
   PasswordInput,
