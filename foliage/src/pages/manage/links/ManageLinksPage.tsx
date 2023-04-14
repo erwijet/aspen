@@ -29,7 +29,7 @@ import { useHotkeys } from "@mantine/hooks";
 const ManageLinksPage = () => {
   const nav = useNavigate();
   const session = useSession();
-  const { ready, client } = useLinksClient();
+  const { ready, client, removeKeyword } = useLinksClient();
 
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,12 +40,16 @@ const ManageLinksPage = () => {
     setLoading(true);
 
     if (query == "")
-      client.get_all({ authority: session.authority }).then(({ results }) => {
-        setLinks(results);
-        setLoading(false);
-      });
+      client
+        .getOrThrow()
+        .get_all({ authority: session.authority })
+        .then(({ results }) => {
+          setLinks(results);
+          setLoading(false);
+        });
     else
       client
+        .getOrThrow()
         .search({ query, username: session.username })
         .then(({ results }) => {
           setLinks(results);
@@ -125,7 +129,11 @@ const ManageLinksPage = () => {
 
           <tbody>
             {links.map((link) => (
-              <tr key={link.id}>
+              <tr
+                key={JSON.stringify(link)}
+                tabIndex={0}
+                onClick={() => alert(link.id)}
+              >
                 <td>{link.name}</td>
                 <td>{link.url}</td>
                 <td>
@@ -133,16 +141,39 @@ const ManageLinksPage = () => {
                     <Badge
                       key={kwd}
                       m={4}
-                      pr={3}
+                      pr={4}
                       rightSection={
-                        <ActionIcon
-                          size="xs"
-                          color="blue"
-                          radius="xl"
-                          variant="transparent"
-                        >
-                          <IconX size={rem(10)} />
-                        </ActionIcon>
+                        link.keywords.length > 1 ? (
+                          <ActionIcon
+                            size="xs"
+                            color="blue"
+                            radius="xl"
+                            variant="transparent"
+                            onClick={(e) => {
+                              e.stopPropagation(); // don't bubble up event to the rows click listener
+                              removeKeyword(link, kwd); // remove the keyword via grpc
+
+                              // optimistic update
+
+                              setLinks(
+                                links.map((e) => {
+                                  if (e.id == link.id)
+                                    return {
+                                      ...e,
+                                      keywords: e.keywords.filter(
+                                        (e) => e != kwd
+                                      ),
+                                    };
+                                  return e;
+                                })
+                              );
+                            }}
+                          >
+                            <IconX size={rem(10)} />
+                          </ActionIcon>
+                        ) : (
+                          <></>
+                        )
                       }
                     >
                       {kwd}
