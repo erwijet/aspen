@@ -42,8 +42,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/manage/links",
-    element: <ManageLinksPage />
-  }
+    element: <ManageLinksPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

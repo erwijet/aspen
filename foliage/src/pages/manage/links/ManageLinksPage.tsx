@@ -8,6 +8,7 @@ import {
   Container,
   Flex,
   Kbd,
+  Modal,
   Space,
   Table,
   TextInput,
@@ -24,7 +25,28 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "trunk-proto/trunk";
-import { useHotkeys } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import LinkDetail from "@/shared/links/LinkDetail";
+
+const NewLinkModal = (props: { opened: boolean; onClose: () => void }) => {
+  const [draft, setDraft] = useState<Omit<Link, "id">>({
+    name: "",
+    url: "",
+    keywords: [],
+    hits: 0,
+  });
+
+  return (
+    <Modal
+      centered
+      opened={props.opened}
+      onClose={props.onClose}
+      title={<Title size="h4">Create Link</Title>}
+    >
+      <LinkDetail value={draft} onChange={setDraft} />
+    </Modal>
+  );
+};
 
 const ManageLinksPage = () => {
   const nav = useNavigate();
@@ -71,9 +93,15 @@ const ManageLinksPage = () => {
     handleQuery(); // load all links on first load
   }, []);
 
+  const [
+    createLinkModalOpen,
+    { open: openCreateLinkModal, close: closeCreateLinkModal },
+  ] = useDisclosure();
+
   return (
     <>
       <NavBar />
+      <NewLinkModal opened={createLinkModalOpen} onClose={closeCreateLinkModal} />
       <Container size={"lg"} my={40}>
         <form
           onSubmit={(e) => {
@@ -84,7 +112,11 @@ const ManageLinksPage = () => {
           <Flex align="center" justify="space-between">
             <Flex align="center" gap={16}>
               <Title>Manage Links</Title>
-              <Button leftIcon={<IconPlus size="1.1rem" />} variant="gradient">
+              <Button
+                leftIcon={<IconPlus size="1.1rem" />}
+                variant="gradient"
+                onClick={() => openCreateLinkModal()}
+              >
                 New
               </Button>
             </Flex>
@@ -179,15 +211,6 @@ const ManageLinksPage = () => {
                       {kwd}
                     </Badge>
                   ))}
-                  <ActionIcon
-                    display={"inline"}
-                    size={"sm"}
-                    color="gray"
-                    radius="xl"
-                    variant="transparent"
-                  >
-                    <IconPlus size={rem(10)} />
-                  </ActionIcon>
                 </td>
               </tr>
             ))}
