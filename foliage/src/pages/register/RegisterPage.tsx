@@ -1,5 +1,5 @@
-import NavBar from "@/shared/NavBar";
-import { useAuthClient } from "@/shared/clients/auth";
+import TopBar from "@/shared/TopBar";
+import { useUserStore } from "@/shared/user";
 import {
   TextInput,
   PasswordInput,
@@ -36,28 +36,27 @@ const RegisterPage = () => {
     validateInputOnChange: true,
   });
 
-  const auth = useAuthClient();
+  const authClient = useUserStore.use.client();
   const nav = useNavigate();
 
   useEffect(() => {
     const { username } = form.values;
-    if (!auth.ready || !username) return;
+    if (!username) return;
 
-    auth.client.is_username_taken({ username }).then(({ taken }) => {
+    authClient.is_username_taken({ username }).then(({ taken }) => {
       if (taken)
         form.setFieldError("username", "That username is already taken!");
     });
   }, [form.values.username]);
 
   async function register() {
-    if (!auth.ready) return;
     if (Object.values(form.errors).length > 0) return;
 
     setLoading(true);
 
     const { username, password, firstName, lastName } = form.values;
 
-    const res = await auth.client.create_account({
+    const res = await authClient.create_account({
       username,
       password,
       firstName,
@@ -73,7 +72,7 @@ const RegisterPage = () => {
 
   return (
     <Box>
-      <NavBar />
+      <TopBar />
       <Container size={420} my={40}>
         <Title
           align="center"

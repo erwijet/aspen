@@ -1,9 +1,7 @@
-import NavBar from "@/shared/NavBar";
-import { useAuthClient } from "@/shared/clients/auth";
+import TopBar from "@/shared/TopBar";
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
   Anchor,
   Paper,
   Title,
@@ -12,9 +10,9 @@ import {
   Button,
   Box,
 } from "@mantine/core";
-import { Form, useForm, zodResolver } from "@mantine/form";
-import { m } from "framer-motion";
+import { Form, useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
+import { useUserStore, helpers as userHelpers } from "@/shared/user";
 
 const LoginPage = () => {
   const form = useForm({
@@ -24,27 +22,26 @@ const LoginPage = () => {
     },
   });
 
-  const auth = useAuthClient();
   const nav = useNavigate();
+  const authClient = useUserStore.use.client();
 
   async function login() {
-    if (!auth.ready) return;
     const { username, password } = form.values;
+    const { authority } = await authClient.log_in({ username, password });
 
-    const { authority } = await auth.client.log_in({ username, password });
-    if (authority) {
-      localStorage.setItem("app.aspn.authority", authority.jwt);
-      nav("/console");
+    if (!authority) {
+      form.setFieldError("username", "Invalid username or password");
+      form.setFieldError("password", "Invalid username or password");
       return;
     }
 
-    form.setFieldError("username", "Invalid username or password");
-    form.setFieldError("password", "Invalid username or password");
+    userHelpers.initWithJwt(authority.jwt);
+    return nav("/console");
   }
 
   return (
     <Box>
-      <NavBar />
+      <TopBar />
       <Container size={420} my={40}>
         <Title
           align="center"

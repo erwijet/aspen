@@ -1,7 +1,7 @@
 {
   "name": "foliage",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,6 +11,7 @@
     "protos:gen": "rm -rf vendor && mkdir vendor && sh protoc.sh"
   },
   "dependencies": {
+    "@bryx-inc/ts-utils": "^1.45.3",
     "@emotion/react": "^11.10.6",
     "@mantine/core": "^6.0.1",
     "@mantine/form": "^6.0.1",

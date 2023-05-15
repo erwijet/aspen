@@ -5,20 +5,23 @@ import {
   Header,
   Title,
   Avatar,
-  Popover,
   Menu,
   UnstyledButton,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { useSession } from "./clients/auth";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
+import { useUserStore, helpers as userHelpers } from "./user";
+import { getAuthority } from "./getAuthority";
 
-const NavBar = () => {
+const TopBar = () => {
   const navigate = useNavigate();
-  const session = useSession();
+  const authed = !!getAuthority();
+
+  const firstName = useUserStore.use.firstName();
+  const lastName = useUserStore.use.lastName();
 
   function logout() {
-    localStorage.removeItem("app.aspn.authority");
+    userHelpers.logout();
     navigate("/login");
   }
 
@@ -26,16 +29,18 @@ const NavBar = () => {
     <Header height={60} px="md">
       <Group position="apart" sx={{ height: "100%" }}>
         <Group align={"center"}>
-          <img src={Logo} height="32" />
+          <a href="/landing">
+            <img src={Logo} height="32" />
+          </a>
           <Title sx={{ fontSize: "25px" }}>Aspen</Title>
         </Group>
 
-        {session.authed ? (
+        {authed ? (
           <Menu width={200} shadow={"md"}>
             <Menu.Target>
               <UnstyledButton>
                 <Avatar style={{ cursor: "pointer" }}>
-                  {session.firstname[0] + session.lastname[0]}
+                  {firstName[0] + lastName[0]}
                 </Avatar>
               </UnstyledButton>
             </Menu.Target>
@@ -66,4 +71,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default TopBar;

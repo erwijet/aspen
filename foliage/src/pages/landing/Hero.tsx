@@ -131,9 +131,13 @@ export const Hero = () => {
 
             <motion.div animate={anim} transition={getTransition(3)}>
               <Group mt={30}>
+                <a href="/register">
+
                 <Button radius="xl" size="md" className={classes.control}>
                   Get started
                 </Button>
+
+                </a>
                 <a href={"https://github.com/erwijet/aspen"}>
                   <Button
                     variant="default"

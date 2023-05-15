@@ -1,6 +1,7 @@
-import { useSession } from "@/shared/clients/auth";
 import { useLinksClient } from "@/shared/clients/links";
-import NavBar from "@/shared/NavBar";
+import TopBar from "@/shared/TopBar";
+import { getAuthority} from "@/shared/getAuthority";
+import { useUserStore } from "@/shared/user";
 import {
   ActionIcon,
   Button,
@@ -9,14 +10,15 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import { IconArrowLeft, IconArrowRight, IconSearch } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import {  IconArrowRight, IconSearch } from "@tabler/icons-react";
+import {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "trunk-proto/trunk";
 
 const ConsolePage = () => {
   const nav = useNavigate();
-  const session = useSession();
+  const authority = getAuthority();
+  const username = useUserStore.use.username();
   const { ready, client } = useLinksClient();
 
   const [query, setQuery] = useState("");
@@ -24,24 +26,26 @@ const ConsolePage = () => {
   const [links, setLinks] = useState<Link[]>([]);
 
   function handleQuery() {
-    if (!ready || !session.authed) return;
+    if (!ready || !authority) return;
     setLoading(true);
-    client.search({ query, username: session.username }).then(({ results }) => {
-      setLinks(results);
-      setLoading(false);
-    });
+    client
+      .getOrThrow()
+      .search({ query, username: username })
+      .then(({ results }) => {
+        setLinks(results);
+        setLoading(false);
+      });
   }
 
   const theme = useMantineTheme();
 
-  if (!session.authed) {
-    nav("/login");
-    return <></>;
-  }
+  useEffect(() => {
+    if (!authority) nav('/login');
+  }, [authority])
 
   return (
     <>
-      <NavBar />
+      <TopBar />
       <Container size={"lg"} my={40}>
         <form
           onSubmit={(e) => {

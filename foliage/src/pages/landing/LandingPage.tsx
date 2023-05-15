@@ -1,12 +1,12 @@
 import { Box } from "@mantine/core";
 
 import Hero from "@/pages/landing/Hero";
-import NavBar from "@/shared/NavBar";
+import TopBar from "@/shared/TopBar";
 
 const LandingPage = () => {
   return (
     <Box pb={120}>
-      <NavBar />
+      <TopBar />
       <Hero />
     </Box>
   );

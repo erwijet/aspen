@@ -1,6 +1,5 @@
-import { useSession } from "@/shared/clients/auth";
 import { useLinksClient } from "@/shared/clients/links";
-import NavBar from "@/shared/NavBar";
+import TopBar from "@/shared/TopBar";
 import {
   ActionIcon,
   Badge,
@@ -18,6 +17,7 @@ import {
 } from "@mantine/core";
 import {
   IconArrowRight,
+  IconCheck,
   IconPlus,
   IconSearch,
   IconX,
@@ -27,14 +27,40 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "trunk-proto/trunk";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import LinkDetail from "@/shared/links/LinkDetail";
+import { useUserStore } from "@/shared/user";
+import { getAuthority } from "@/shared/getAuthority";
+import { SideBar } from "@/shared/SideBar";
+import { isNone } from "@bryx-inc/ts-utils";
 
-const NewLinkModal = (props: { opened: boolean; onClose: () => void }) => {
+const NewLinkModal = (props: {
+  opened: boolean;
+  onClose: () => void;
+  onRefreshRequested: () => void;
+}) => {
   const [draft, setDraft] = useState<Omit<Link, "id">>({
     name: "",
     url: "",
     keywords: [],
     hits: 0,
   });
+
+  const authority = getAuthority();
+  const { ready, client } = useLinksClient();
+
+  async function handleCreate() {
+    if (!ready || isNone(authority)) return;
+    const { name, keywords, url } = draft;
+
+    await client.getOrThrow().create({
+      authority,
+      name,
+      keywords,
+      url,
+    });
+
+    props.onRefreshRequested();
+    props.onClose();
+  }
 
   return (
     <Modal
@@ -44,27 +70,37 @@ const NewLinkModal = (props: { opened: boolean; onClose: () => void }) => {
       title={<Title size="h4">Create Link</Title>}
     >
       <LinkDetail value={draft} onChange={setDraft} />
+      <Flex justify={"flex-end"}>
+        <Button
+          leftIcon={<IconCheck size="1.1rem" />}
+          onClick={() => handleCreate()}
+        >
+          Create
+        </Button>
+      </Flex>
     </Modal>
   );
 };
 
 const ManageLinksPage = () => {
   const nav = useNavigate();
-  const session = useSession();
+  const username = useUserStore.use.username();
   const { ready, client, removeKeyword } = useLinksClient();
 
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<Link[]>([]);
 
+  const authority = getAuthority();
+
   function handleQuery() {
-    if (!ready || !session.authed) return;
+    if (!ready || !authority) return;
     setLoading(true);
 
     if (query == "")
       client
         .getOrThrow()
-        .get_all({ authority: session.authority })
+        .get_all({ authority })
         .then(({ results }) => {
           setLinks(results);
           setLoading(false);
@@ -72,7 +108,7 @@ const ManageLinksPage = () => {
     else
       client
         .getOrThrow()
-        .search({ query, username: session.username })
+        .search({ query, username })
         .then(({ results }) => {
           setLinks(results);
           setLoading(false);
@@ -84,11 +120,6 @@ const ManageLinksPage = () => {
 
   useHotkeys([["/", () => searchBarRef.current?.focus()]]);
 
-  if (!session.authed) {
-    nav("/login");
-    return <></>;
-  }
-
   useEffect(() => {
     handleQuery(); // load all links on first load
   }, []);
@@ -98,10 +129,17 @@ const ManageLinksPage = () => {
     { open: openCreateLinkModal, close: closeCreateLinkModal },
   ] = useDisclosure();
 
+  useEffect(() => {
+    if (authority == null) nav("/login");
+  }, [authority]);
+
   return (
     <>
-      <NavBar />
-      <NewLinkModal opened={createLinkModalOpen} onClose={closeCreateLinkModal} />
+      <NewLinkModal
+        opened={createLinkModalOpen}
+        onClose={closeCreateLinkModal}
+        onRefreshRequested={() => handleQuery()}
+      />
       <Container size={"lg"} my={40}>
         <form
           onSubmit={(e) => {
