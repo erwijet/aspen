@@ -82,12 +82,11 @@ struct HomeView: View {
         
         .sheet(isPresented: $isLinkBuilderOpen) {
             VStack {
-                Capsule().fill(Color.secondary).frame(width: 30, height: 3).padding(10)
                 LinkBuilderView(authority) {
                     isLinkBuilderOpen.toggle()
                     viewModel.refreshLinks()
                 }
-            }
+            } .presentationDetents([.medium, .large])
         }
     }
 }

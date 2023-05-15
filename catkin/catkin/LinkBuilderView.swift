@@ -60,7 +60,6 @@ struct LinkBuilderView: View {
     
     var body: some View {
         VStack {
-            
             HStack {
                 Text("New Link").font(.title).bold().frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
@@ -97,7 +96,7 @@ struct LinkBuilderView: View {
                         }
                     }
                 }
-            }.scrollContentBackground(.hidden)
+            }
         }
     }
     
