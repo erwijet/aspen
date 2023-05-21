@@ -9,8 +9,8 @@ use crate::{
   jwt::JwtSubject,
   proto::{
     self, links_server::Links, CreateLinkRequest, CreateLinkResponse, DeleteLinkRequest,
-    DeleteLinkResponse, GetAllLinksRequest, LinksResponse, SearchLinksRequest, UpdateLinkRequest,
-    UpdateLinkResponse,
+    DeleteLinkResponse, GetAllLinksRequest, GetLinkRequest, LinkResponse, LinksResponse,
+    SearchLinksRequest, UpdateLinkRequest, UpdateLinkResponse,
   },
   DB,
 };
@@ -51,6 +51,28 @@ impl Links for LinksService {
     Ok(Response::new(LinksResponse {
       results: results.into_iter().map(|link| link.into()).collect(),
     }))
+  }
+
+  async fn get(&self, req: Request<GetLinkRequest>) -> Result<Response<LinkResponse>, Status> {
+    let GetLinkRequest { authority, link_id } = req.into_inner();
+    let username = authority.usr()?;
+    let oid = ObjectId::from_str(&link_id).map_err(IntoStatus::into_status)?;
+
+    let result = DB.get().await.get_link(oid).await.map_err(IntoStatus::into_status)?.ok_or(
+      Status::not_found(format!(
+        "Could not find link with id '{}', or you do not own it.",
+        link_id
+      )),
+    )?;
+
+    if &result.account != &username {
+      return Err(Status::not_found(format!(
+        "Could not find link with id '{}', or you do not own it.",
+        link_id
+      )));
+    }
+
+    Ok(Response::new(LinkResponse { result: Some(result.into()) }))
   }
 
   async fn get_all(
@@ -99,13 +121,8 @@ impl Links for LinksService {
       return Err(Status::permission_denied("no ownership"));
     }
 
-    let proto::Link {
-      id,
-      keywords: update_keywords,
-      url: update_url,
-      name: update_name,
-      ..
-    } = update.unwrap();
+    let proto::Link { id, keywords: update_keywords, url: update_url, name: update_name, .. } =
+      update.unwrap();
 
     if !id.is_empty() && id != link_id {
       return Err(Status::failed_precondition("id is an immutable field"));
@@ -127,9 +144,9 @@ impl Links for LinksService {
         },
         name: match update_name {
           name if !name.is_empty() => name,
-          _ => link.name
+          _ => link.name,
         },
-        hits: link.hits
+        hits: link.hits,
       })
       .await
       .map_err(IntoStatus::into_status)?;

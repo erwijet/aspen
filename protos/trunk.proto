@@ -55,6 +55,7 @@ message IsUsernameTakenResponse {
 service Links {
     rpc search (SearchLinksRequest) returns (LinksResponse);
     rpc get_all (GetAllLinksRequest) returns (LinksResponse);
+    rpc get (GetLinkRequest) returns (LinkResponse);
     rpc update (UpdateLinkRequest) returns (UpdateLinkResponse);
     rpc delete (DeleteLinkRequest) returns (DeleteLinkResponse);
     rpc create (CreateLinkRequest) returns (CreateLinkResponse);
@@ -69,8 +70,17 @@ message GetAllLinksRequest {
     Authority authority = 1; 
 }
 
+message GetLinkRequest {
+  Authority authority = 1;
+  string link_id = 2;
+}
+
 message LinksResponse {
     repeated Link results = 1;
+}
+
+message LinkResponse {
+  Link result = 1;
 }
 
 message UpdateLinkRequest {
