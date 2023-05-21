@@ -295,6 +295,7 @@ impl AspenDB {
         doc! { "_id": link_id },
         doc! {
           "$set": {
+            "name": link.name,
             "url": link.url,
             "keywords": link.keywords
           }
