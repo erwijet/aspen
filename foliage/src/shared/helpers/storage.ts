@@ -1,4 +1,4 @@
-const KEYS = ["authority"] as const;
+const KEYS = ["authority", "scheme"] as const;
 
 export default KEYS.reduce(
   (actions, k) => ({

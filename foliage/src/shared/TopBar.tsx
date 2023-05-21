@@ -7,9 +7,19 @@ import {
   Avatar,
   Menu,
   UnstyledButton,
+  ActionIcon,
+  useMantineColorScheme,
+  Switch,
+  useMantineTheme,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { IconLogout, IconSettings } from "@tabler/icons-react";
+import {
+  IconHelp,
+  IconLogout,
+  IconMoonStars,
+  IconSettings,
+  IconSun,
+} from "@tabler/icons-react";
 import { useUserStore, helpers as userHelpers } from "./user";
 import { getAuthority } from "./getAuthority";
 
@@ -20,6 +30,8 @@ const TopBar = () => {
   const lastName = useUserStore.use.lastName();
 
   const nav = useNavigate();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const theme = useMantineTheme();
 
   function logout() {
     userHelpers.logout();
@@ -36,6 +48,24 @@ const TopBar = () => {
         >
           <img src={Logo} height="32" />
           <Title sx={{ fontSize: "25px" }}>Aspen</Title>
+
+          <Group position="center">
+            <Switch
+              checked={colorScheme === "dark"}
+              onChange={() => toggleColorScheme()}
+              size="lg"
+              onLabel={
+                <IconSun color={theme.white} size="1.25rem" stroke={1.5} />
+              }
+              offLabel={
+                <IconMoonStars
+                  color={theme.colors.gray[6]}
+                  size="1.25rem"
+                  stroke={1.5}
+                />
+              }
+            />
+          </Group>
         </Group>
 
         {authed ? (
@@ -48,7 +78,13 @@ const TopBar = () => {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Account</Menu.Label>
+              {/* <Menu.Label>Account</Menu.Label> */}
+              <Menu.Item
+                icon={<IconHelp size={14} />}
+                onClick={() => nav("/how")}
+              >
+                <UnstyledButton>Help</UnstyledButton>
+              </Menu.Item>
               <Menu.Item
                 icon={<IconLogout size={14} />}
                 onClick={() => logout()}

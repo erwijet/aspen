@@ -148,6 +148,17 @@ export const Hero = () => {
                     Source code
                   </Button>
                 </a>
+
+                <a href={"/how"}>
+                  <Button
+                    variant="default"
+                    radius="xl"
+                    size="md"
+                    className={classes.control}
+                  >
+                    How it Works
+                  </Button>
+                </a>
               </Group>
             </motion.div>
           </div>
