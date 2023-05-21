@@ -56,6 +56,9 @@ impl Links for LinksService {
   async fn get(&self, req: Request<GetLinkRequest>) -> Result<Response<LinkResponse>, Status> {
     let GetLinkRequest { authority, link_id } = req.into_inner();
     let username = authority.usr()?;
+
+    check_field!(link_id);
+
     let oid = ObjectId::from_str(&link_id).map_err(IntoStatus::into_status)?;
 
     let result = DB.get().await.get_link(oid).await.map_err(IntoStatus::into_status)?.ok_or(
