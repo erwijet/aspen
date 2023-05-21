@@ -1,25 +1,16 @@
-import {
-  Button,
-  Container,
-  Flex,
-  MultiSelect,
-  Space,
-  TextInput,
-} from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
-import { Authority, Link } from "trunk-proto/trunk";
-import { useLinksClient } from "../clients/links";
+import { Flex, MultiSelect, Space, TextInput } from "@mantine/core";
+import { Link } from "trunk-proto/trunk";
+import { slicePropertyAtDeepKey } from "@bryx-inc/ts-utils";
+import { useUserStore } from "../../shared/user";
 
 const LinkDetail = (props: {
   value: Omit<Link, "id">;
   onChange: (link: Omit<Link, "id">) => void;
 }) => {
-  const links = useLinksClient();
-  const [allUserKeywords, setAllUserKeywords] = useState<string[]>([]);
+  const allUserKeywords = useUserStore.use.keywords();
 
   return (
-    <Flex p={8} direction={'column'} gap="sm">
+    <Flex p={8} direction={"column"} gap="sm">
       <TextInput
         label="Name"
         title="Link Name"
@@ -35,22 +26,20 @@ const LinkDetail = (props: {
         value={props.value.url}
         placeholder="https://example.com"
         onChange={(e) =>
-          props.onChange({ ...props.value, url: e.target.value })
+          props.onChange(
+            slicePropertyAtDeepKey(props.value, "url", e.target.value)
+          )
         }
       />
       <MultiSelect
         searchable
         creatable
         label="Keywords"
-        data={allUserKeywords}
+        data={allUserKeywords.concat(props.value.keywords)}
         getCreateLabel={(keyword) => `New Keyword "${keyword}"`}
-        onCreate={(query) => {
-          props.onChange({
-            ...props.value,
-            keywords: props.value.keywords.concat([query]),
-          });
-
-          return query;
+        value={props.value.keywords}
+        onChange={(kwds) => {
+          props.onChange(slicePropertyAtDeepKey(props.value, "keywords", kwds));
         }}
       />
       <Space h={16} />

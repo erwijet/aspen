@@ -1,5 +1,5 @@
 import { Authority } from "trunk-proto/trunk";
-import localstorage from "./helpers/localstorage";
+import localstorage from "./helpers/storage";
 
 export function getAuthority() {
     const jwt = localstorage.authority.get();

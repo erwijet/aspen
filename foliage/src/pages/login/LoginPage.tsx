@@ -36,7 +36,7 @@ const LoginPage = () => {
     }
 
     userHelpers.initWithJwt(authority.jwt);
-    return nav("/console");
+    return nav("/links");
   }
 
   return (

@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "dev": "vite",
     "build": "pnpm run protos:gen && tsc && vite build",
     "format": "pnpm prettier -w src/*",
@@ -11,7 +12,7 @@
     "protos:gen": "rm -rf vendor && mkdir vendor && sh protoc.sh"
   },
   "dependencies": {
-    "@bryx-inc/ts-utils": "^1.45.3",
+    "@bryx-inc/ts-utils": "^1.48.0",
     "@emotion/react": "^11.10.6",
     "@mantine/core": "^6.0.1",
     "@mantine/form": "^6.0.1",
@@ -22,7 +23,6 @@
     "jsonwebtoken": "^9.0.0",
     "nice-grpc-common": "^2.0.1",
     "nice-grpc-web": "^3.1.0",
-    "prelude-ts": "^1.0.6",
     "protobufjs": "^7.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

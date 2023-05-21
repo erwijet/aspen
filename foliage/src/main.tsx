@@ -1,39 +1,26 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 
 import LandingPage from "@/pages/landing/LandingPage";
 import LoginPage from "@/pages/login/LoginPage";
 import { helpers as userHelpers } from "@/shared/user";
 
-import localstorage from "./shared/helpers/localstorage";
+import storage from "./shared/helpers/storage";
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-} from "react-router-dom";
+import ManageLinksPage from "@/pages/links/ManageLinksPage";
 import RegisterPage from "@/pages/register/RegisterPage";
-import ConsolePage from "@/pages/console/ConsolePage";
-import { useLinksClient } from "@/shared/clients/links";
-import ManageLinksPage from "@/pages/manage/links/ManageLinksPage";
+import { useLinksClient } from "@/shared/links";
+import { useConst, withSome } from "@bryx-inc/ts-utils";
 import { AppShell } from "@mantine/core";
-import { SideBar } from "./shared/SideBar";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import TopBar from "./shared/TopBar";
 
-useLinksClient.getState().init();
-
-function createPage(
-  elem: JSX.Element,
-  opts: { header?: boolean; sidebar?: boolean }
-) {
-  return (
-    <AppShell
-      header={opts.header ? <TopBar /> : <></>}
-      navbar={opts.sidebar ? <SideBar /> : <></>}
-    >
-      {elem}
-    </AppShell>
-  );
+function createPage(elem: JSX.Element) {
+  return <AppShell header={<TopBar />}>{elem}</AppShell>;
 }
 
 const router = createBrowserRouter([
@@ -43,33 +30,29 @@ const router = createBrowserRouter([
   },
   {
     path: "/landing",
-    element: createPage(<LandingPage />, { header: true }),
+    element: createPage(<LandingPage />),
   },
   {
     path: "/login",
-    element: createPage(<LoginPage />, { header: true }),
+    element: createPage(<LoginPage />),
   },
   {
     path: "/register",
-    element: createPage(<RegisterPage />, { header: true }),
-  },
-  {
-    path: "/console",
-    element: createPage(<ConsolePage />, { header: true, sidebar: true }),
+    element: createPage(<RegisterPage />),
   },
   {
     path: "/links",
-    element: createPage(<ManageLinksPage />, { header: true, sidebar: true }),
+    element: createPage(<ManageLinksPage />),
   },
 ]);
 
 function Root(props: { children: ReactNode }) {
-  useEffect(() => {
-    const jwt = localstorage.authority.get();
-    if (!jwt) return;
+  useConst(() => {
+    useLinksClient.get.init()();
+    const jwt = storage.authority.get();
 
-    userHelpers.initWithJwt(jwt);
-  }, []);
+    withSome(jwt, userHelpers.initWithJwt);
+  });
 
   return <>{props.children}</>;
 }

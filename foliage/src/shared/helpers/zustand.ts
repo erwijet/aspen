@@ -1,8 +1,12 @@
+import { getPropertyUnsafe } from "@bryx-inc/ts-utils";
 import { StateCreator, StoreApi, UseBoundStore, create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 type WithSelectors<S> = S extends { getState: () => infer T }
-  ? S & { use: { [K in keyof T]: () => T[K] } }
+  ? S & {
+      use: { [K in keyof T]: () => T[K] };
+      get: { [K in keyof T]: () => T[K] };
+    }
   : never;
 
 export function createSelectors<S extends UseBoundStore<StoreApi<object>>>(
@@ -10,9 +14,13 @@ export function createSelectors<S extends UseBoundStore<StoreApi<object>>>(
 ) {
   let store = _store as WithSelectors<typeof _store>;
   store.use = {};
+  store.get = {};
 
-  for (const k of Object.keys(store.getState()))
+  for (const k of Object.keys(store.getState())) {
     (store.use as any)[k] = () => store((s) => s[k as keyof typeof s]);
+    (store.get as any)[k] = () => getPropertyUnsafe(store.getState(), k);
+  }
+  
 
   return store;
 }

@@ -14,24 +14,27 @@ import { useUserStore, helpers as userHelpers } from "./user";
 import { getAuthority } from "./getAuthority";
 
 const TopBar = () => {
-  const navigate = useNavigate();
   const authed = !!getAuthority();
 
   const firstName = useUserStore.use.firstName();
   const lastName = useUserStore.use.lastName();
 
+  const nav = useNavigate();
+
   function logout() {
     userHelpers.logout();
-    navigate("/login");
+    nav("/login");
   }
 
   return (
     <Header height={60} px="md">
       <Group position="apart" sx={{ height: "100%" }}>
-        <Group align={"center"}>
-          <a href="/landing">
-            <img src={Logo} height="32" />
-          </a>
+        <Group
+          onClick={() => nav("/landing")}
+          style={{ cursor: "pointer" }}
+          align={"center"}
+        >
+          <img src={Logo} height="32" />
           <Title sx={{ fontSize: "25px" }}>Aspen</Title>
         </Group>
 
@@ -46,9 +49,6 @@ const TopBar = () => {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Account</Menu.Label>
-              <Menu.Item type="button" icon={<IconSettings size={14} />}>
-                <UnstyledButton>Settings</UnstyledButton>
-              </Menu.Item>
               <Menu.Item
                 icon={<IconLogout size={14} />}
                 onClick={() => logout()}
@@ -59,11 +59,11 @@ const TopBar = () => {
           </Menu>
         ) : (
           <Group>
-            <Button variant="default" onClick={() => navigate("/login")}>
+            <Button variant="default" onClick={() => nav("/login")}>
               Log in
             </Button>
 
-            <Button onClick={() => navigate("/register")}>Sign Up</Button>
+            <Button onClick={() => nav("/register")}>Sign Up</Button>
           </Group>
         )}
       </Group>

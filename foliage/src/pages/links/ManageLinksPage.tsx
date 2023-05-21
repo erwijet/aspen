@@ -1,13 +1,15 @@
-import { useLinksClient } from "@/shared/clients/links";
-import TopBar from "@/shared/TopBar";
+import { useLinksClient } from "@/shared/links";
+import { getAuthority } from "@/shared/getAuthority";
+import { helpers, useUserStore } from "@/shared/user";
+import { Maybe, isNone, isSome } from "@bryx-inc/ts-utils";
 import {
   ActionIcon,
   Badge,
   Button,
   Container,
   Flex,
+  Group,
   Kbd,
-  Modal,
   Space,
   Table,
   TextInput,
@@ -15,9 +17,9 @@ import {
   rem,
   useMantineTheme,
 } from "@mantine/core";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
-  IconCheck,
   IconPlus,
   IconSearch,
   IconX,
@@ -25,94 +27,35 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "trunk-proto/trunk";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import LinkDetail from "@/shared/links/LinkDetail";
-import { useUserStore } from "@/shared/user";
-import { getAuthority } from "@/shared/getAuthority";
-import { SideBar } from "@/shared/SideBar";
-import { isNone } from "@bryx-inc/ts-utils";
-
-const NewLinkModal = (props: {
-  opened: boolean;
-  onClose: () => void;
-  onRefreshRequested: () => void;
-}) => {
-  const [draft, setDraft] = useState<Omit<Link, "id">>({
-    name: "",
-    url: "",
-    keywords: [],
-    hits: 0,
-  });
-
-  const authority = getAuthority();
-  const { ready, client } = useLinksClient();
-
-  async function handleCreate() {
-    if (!ready || isNone(authority)) return;
-    const { name, keywords, url } = draft;
-
-    await client.getOrThrow().create({
-      authority,
-      name,
-      keywords,
-      url,
-    });
-
-    props.onRefreshRequested();
-    props.onClose();
-  }
-
-  return (
-    <Modal
-      centered
-      opened={props.opened}
-      onClose={props.onClose}
-      title={<Title size="h4">Create Link</Title>}
-    >
-      <LinkDetail value={draft} onChange={setDraft} />
-      <Flex justify={"flex-end"}>
-        <Button
-          leftIcon={<IconCheck size="1.1rem" />}
-          onClick={() => handleCreate()}
-        >
-          Create
-        </Button>
-      </Flex>
-    </Modal>
-  );
-};
+import NewLinkModal from "./NewLinkModal";
+import EditLinkModal from "./EditLinkModal";
 
 const ManageLinksPage = () => {
   const nav = useNavigate();
   const username = useUserStore.use.username();
-  const { ready, client, removeKeyword } = useLinksClient();
+  const { client, removeKeyword } = useLinksClient();
 
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<Link[]>([]);
+  const [selectedLinkId, setSelectedLinkId] = useState<Maybe<string>>(null);
 
   const authority = getAuthority();
 
-  function handleQuery() {
-    if (!ready || !authority) return;
+  async function handleQuery() {
+    if (isNone(client) || isNone(authority)) return;
     setLoading(true);
 
     if (query == "")
-      client
-        .getOrThrow()
-        .get_all({ authority })
-        .then(({ results }) => {
-          setLinks(results);
-          setLoading(false);
-        });
+      await client.get_all({ authority }).then(({ results }) => {
+        setLinks(results);
+        setLoading(false);
+      });
     else
-      client
-        .getOrThrow()
-        .search({ query, username })
-        .then(({ results }) => {
-          setLinks(results);
-          setLoading(false);
-        });
+      await client.search({ query, username }).then(({ results }) => {
+        setLinks(results);
+        setLoading(false);
+      });
   }
 
   const theme = useMantineTheme();
@@ -134,11 +77,23 @@ const ManageLinksPage = () => {
   }, [authority]);
 
   return (
-    <>
+    <Group>
       <NewLinkModal
         opened={createLinkModalOpen}
         onClose={closeCreateLinkModal}
-        onRefreshRequested={() => handleQuery()}
+        onRefresh={async () => {
+          await handleQuery();
+          await helpers.refreshUserKeywords();
+        }}
+      />
+      <EditLinkModal 
+         linkId={selectedLinkId ?? ""}
+         opened={isSome(selectedLinkId)}
+         onClose={(() => setSelectedLinkId(null))}
+         onRefresh={async () => {
+          await handleQuery();
+          await helpers.refreshUserKeywords();
+         }}
       />
       <Container size={"lg"} my={40}>
         <form
@@ -202,7 +157,7 @@ const ManageLinksPage = () => {
               <tr
                 key={JSON.stringify(link)}
                 tabIndex={0}
-                onClick={() => alert(link.id)}
+                onClick={() => setSelectedLinkId(link.id)}
               >
                 <td>{link.name}</td>
                 <td>{link.url}</td>
@@ -255,7 +210,7 @@ const ManageLinksPage = () => {
           </tbody>
         </Table>
       </Container>
-    </>
+    </Group>
   );
 };
 

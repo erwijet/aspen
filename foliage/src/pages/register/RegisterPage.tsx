@@ -72,7 +72,6 @@ const RegisterPage = () => {
 
   return (
     <Box>
-      <TopBar />
       <Container size={420} my={40}>
         <Title
           align="center"

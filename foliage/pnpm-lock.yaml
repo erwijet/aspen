@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@bryx-inc/ts-utils':
+    specifier: ^1.48.0
+    version: 1.48.0
   '@emotion/react':
     specifier: ^11.10.6
     version: 11.10.6(@types/react@18.0.28)(react@18.2.0)
@@ -31,9 +34,6 @@ dependencies:
   nice-grpc-web:
     specifier: ^3.1.0
     version: 3.1.0(ws@8.13.0)
-  prelude-ts:
-    specifier: ^1.0.6
-    version: 1.0.6
   protobufjs:
     specifier: ^7.2.2
     version: 7.2.2
@@ -137,6 +137,12 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+    dev: false
+
+  /@bryx-inc/ts-utils@1.48.0:
+    resolution: {integrity: sha512-mXQ28y8sES9fbFwcMMScDatjWBH0S96/Wk2fOr9in70LrVqniP98m1h/BOB79gXXY40PTxUV4xpHt++/PQ80Zw==}
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@emotion/babel-plugin@11.10.6:
@@ -1545,10 +1551,6 @@ packages:
       handlebars: 4.7.7
     dev: true
 
-  /hamt_plus@1.0.2:
-    resolution: {integrity: sha512-t2JXKaehnMb9paaYA7J0BX8QQAY8lwfQ9Gjf4pg/mk4krt+cmwmU652HOoWonf+7+EQV97ARPMhhVgU1ra2GhA==}
-    dev: false
-
   /handlebars@4.7.7:
     resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}
     engines: {node: '>=0.4.7'}
@@ -1782,10 +1784,6 @@ packages:
 
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
-    dev: false
-
-  /list@2.0.19:
-    resolution: {integrity: sha512-nnVaRp4RaMAQkCpypTThsdxKqgPMiSwJq93eAm2/IbpUa8sd04XKBhkKu+bMk63HmdjK8b8Cuh4xARHWX2ye/Q==}
     dev: false
 
   /locate-path@6.0.0:
@@ -2120,13 +2118,6 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
     dev: true
-
-  /prelude-ts@1.0.6:
-    resolution: {integrity: sha512-AESHLCJ7psPqtj69LEJlZ2ENTnYeI2IJyxpWz459Ag556O/4u41JLOK11ZHTsMeUrRJQ+xWA6ulw/hGycXgEkA==}
-    dependencies:
-      hamt_plus: 1.0.2
-      list: 2.0.19
-    dev: false
 
   /process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
