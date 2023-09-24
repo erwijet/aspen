@@ -67,7 +67,7 @@ const RegisterPage = () => {
       alert("failed to create account!");
     localStorage.setItem("app.aspn.authority", res.authority!.jwt);
 
-    nav("/console");
+    nav("/");
   }
 
   return (
